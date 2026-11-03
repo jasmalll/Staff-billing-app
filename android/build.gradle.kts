@@ -23,10 +23,10 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
-// Force Android library plugins to compile against SDK 36
+// Force all Android library plugins to use SDK 36
 subprojects {
     plugins.withId("com.android.library") {
-        extensions.configure<com.android.build.gradle.LibraryExtension> {
+        extensions.configure<com.android.build.api.dsl.LibraryExtension> {
             compileSdk = 36
         }
     }
