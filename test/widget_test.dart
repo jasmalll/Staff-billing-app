@@ -8,6 +8,7 @@ import 'package:billing/models/calculation_model.dart';
 import 'package:billing/models/other_models.dart';
 import 'package:billing/services/storage_service.dart';
 import 'package:billing/services/theme_service.dart';
+import 'package:billing/models/catering_bill.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
