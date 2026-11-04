@@ -322,7 +322,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       CalendarScreen(
         onSelectBill: _loadExistingBillFromCalendar,
       ),
-      const DashboardScreen(),
+      DashboardScreen(onOpenEvents: () => setState(() => _currentIndex = 5)),
       OtherScreen(onOpenBill: _loadExistingBillFromCalendar),
       EventsScreen(onOpenBill: _loadExistingBillFromCalendar),
     ];

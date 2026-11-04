@@ -5,7 +5,8 @@ import '../models/catering_bill.dart';
 import '../services/storage_service.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  final VoidCallback? onOpenEvents;
+  const DashboardScreen({super.key, this.onOpenEvents});
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
@@ -89,6 +90,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ]),
               ]),
             ),
+            const SizedBox(height: 18),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(children: [
+                    Container(width: 42, height: 42, decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(.10), borderRadius: BorderRadius.circular(13)), child: Icon(Icons.event_available_rounded, color: theme.colorScheme.primary)),
+                    const SizedBox(width: 11),
+                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      const Text('Event Management', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+                      Text('${_bills.length} saved events · Staff counts & Total TA', style: theme.textTheme.bodySmall),
+                    ])),
+                    FilledButton.tonalIcon(onPressed: widget.onOpenEvents, icon: const Icon(Icons.arrow_forward_rounded, size: 17), label: const Text('Open')),
+                  ]),
+                  const SizedBox(height: 12),
+                  Row(children: [
+                    Expanded(child: _quickCount('Boys', _bills.fold<int>(0, (v, b) => v + b.boys.length))),
+                    Expanded(child: _quickCount('SP', _bills.fold<int>(0, (v, b) => v + b.spList.length))),
+                    Expanded(child: _quickCount('CP', _bills.fold<int>(0, (v, b) => v + b.cpList.length))),
+                    Expanded(child: _quickCount('Hosting', _bills.fold<int>(0, (v, b) => v + b.hostingCount))),
+                  ]),
+                ]),
+              ),
+            ),
             const SizedBox(height: 22),
             Row(children: [Text('Monthly analytics', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)), const Spacer(),
               IconButton(onPressed: () => setState(() => _month = DateTime(_month.year, _month.month - 1)), icon: const Icon(Icons.chevron_left_rounded)),
@@ -125,7 +150,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 margin: const EdgeInsets.only(bottom: 9),
                 child: ListTile(
                   leading: Container(width: 42, height: 42, decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(.09), borderRadius: BorderRadius.circular(13)), child: Icon(Icons.event_note_rounded, color: theme.colorScheme.primary)),
-                  title: Text(bill.auditoriumName.isEmpty ? 'Untitled event' : bill.auditoriumName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700)),
+                  title: Text(bill.eventName.isNotEmpty ? bill.eventName : (bill.auditoriumName.isEmpty ? 'Untitled event' : bill.auditoriumName), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700)),
                   subtitle: Text(DateFormat('dd MMM yyyy').format(bill.date)),
                   trailing: Text(_money(bill.getAllTotalBill(bill.taMultiplier)), style: const TextStyle(fontWeight: FontWeight.w800)),
                 ),
@@ -138,6 +163,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  Widget _quickCount(String label, int value) => Padding(padding: const EdgeInsets.only(right: 4), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('$value', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)), Text(label, style: Theme.of(context).textTheme.labelSmall)]));
   Widget _heroMetric(String label, String value) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(value, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)), Text(label, style: const TextStyle(color: Colors.white70, fontSize: 10))]);
   Widget _sectionTitle(String title) => Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800));
   Widget _metric(String title, String value, IconData icon, Color accent) => Card(child: Padding(padding: const EdgeInsets.all(14), child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Icon(icon, color: accent), Text(value, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)), Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11))])));
