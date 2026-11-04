@@ -11,6 +11,7 @@ import 'screens/other_screen.dart';
 import 'services/supabase_service.dart';
 import 'services/theme_service.dart';
 import 'screens/dashboard_screen.dart';
+import 'screens/events_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -97,6 +98,8 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
 
   String currentBillId = DateTime.now().millisecondsSinceEpoch.toString();
   String auditoriumName = '';
+  String eventName = '';
+  int hostingCount = 0;
   DateTime eventDate = DateTime.now();
   double otherExpenses = 0.0;
   double settingExpenses = 0.0;
@@ -128,6 +131,8 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       setState(() {
         currentBillId = active.id;
         auditoriumName = active.auditoriumName;
+        eventName = active.eventName;
+        hostingCount = active.hostingCount;
         eventDate = active.date;
         otherExpenses = active.otherExpenses;
         settingExpenses = active.settingExpenses;
@@ -148,6 +153,8 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       setState(() {
         currentBillId = DateTime.now().millisecondsSinceEpoch.toString();
         auditoriumName = '';
+        eventName = '';
+        hostingCount = 0;
         eventDate = DateTime.now();
         otherExpenses = 0;
         settingExpenses = 0;
@@ -168,6 +175,8 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       final bill = CateringBill(
         id: currentBillId,
         auditoriumName: auditoriumName.trim(),
+        eventName: eventName.trim(),
+        hostingCount: hostingCount,
         date: eventDate,
         otherExpenses: otherExpenses,
         settingExpenses: settingExpenses,
@@ -199,6 +208,8 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
     setState(() {
       currentBillId = DateTime.now().millisecondsSinceEpoch.toString();
       auditoriumName = '';
+      eventName = '';
+      hostingCount = 0;
       eventDate = DateTime.now();
       otherExpenses = 0.0;
       settingExpenses = 0.0;
@@ -217,6 +228,8 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
     setState(() {
       currentBillId = bill.id;
       auditoriumName = bill.auditoriumName;
+      eventName = bill.eventName;
+      hostingCount = bill.hostingCount;
       eventDate = bill.date;
       otherExpenses = bill.otherExpenses;
       settingExpenses = bill.settingExpenses;
@@ -311,6 +324,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       ),
       const DashboardScreen(),
       OtherScreen(onOpenBill: _loadExistingBillFromCalendar),
+      EventsScreen(onOpenBill: _loadExistingBillFromCalendar),
     ];
 
     return Scaffold(
@@ -382,6 +396,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
               ),
               NavigationDestination(icon: Icon(Icons.dashboard_rounded), selectedIcon: Icon(Icons.dashboard_rounded), label: 'Dashboard'),
               NavigationDestination(icon: Icon(Icons.grid_view_rounded), selectedIcon: Icon(Icons.grid_view_rounded), label: 'Manage'),
+              NavigationDestination(icon: Icon(Icons.event_note_rounded), selectedIcon: Icon(Icons.event_note_rounded), label: 'Events'),
             ],
           ),
         ),

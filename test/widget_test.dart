@@ -28,6 +28,24 @@ void main() {
     expect(bill.getAllTotalTa(3), 120);
   });
 
+  test('event metadata is preserved in bill serialization and legacy defaults', () {
+    final bill = CateringBill(
+      id: 'event-1',
+      auditoriumName: 'C & P Auditorium',
+      eventName: 'Wedding',
+      hostingCount: 5,
+      date: DateTime(2026, 11, 4),
+      staffList: const [],
+      groupGpay: const {},
+    );
+    final restored = CateringBill.fromJson(bill.toJson());
+    expect(restored.eventName, 'Wedding');
+    expect(restored.hostingCount, 5);
+    final legacy = CateringBill.fromMap({'id': 'legacy', 'auditoriumName': 'Hall', 'staffList': [], 'groupGpay': {}});
+    expect(legacy.eventName, '');
+    expect(legacy.hostingCount, 0);
+  });
+
   test('settlement balances deduct allowances from the selected source', () {
     final settlement = EventSettlement(
       eventDate: '2026-10-14',
@@ -113,7 +131,7 @@ void main() {
     expect(navigationBar.selectedIndex, 3);
   });
 
-  testWidgets('app shows all five main sections', (WidgetTester tester) async {
+  testWidgets('app shows all six main sections', (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const StaffBillingApp());
     await tester.pumpAndSettle();
@@ -122,5 +140,6 @@ void main() {
     expect(find.text('Calendar'), findsAtLeastNWidgets(1));
     expect(find.text('Dashboard'), findsAtLeastNWidgets(1));
     expect(find.text('Manage'), findsAtLeastNWidgets(1));
+    expect(find.text('Events'), findsAtLeastNWidgets(1));
   });
 }

@@ -49,6 +49,12 @@ jobs:
       - name: Verify dependencies
         run: flutter pub deps
 
+      - name: Analyze Flutter project
+        run: flutter analyze
+
+      - name: Run Flutter tests
+        run: flutter test
+
       - name: Build Android APK
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}

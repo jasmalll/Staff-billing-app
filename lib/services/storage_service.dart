@@ -10,8 +10,14 @@ import 'supabase_service.dart';
 class StorageService {
   /// Emits whenever a restore replaces local app data; mounted screens reload from storage.
   static final ValueNotifier<int> dataRevision = ValueNotifier<int>(0);
+  static final ValueNotifier<int> billsRevision = ValueNotifier<int>(0);
 
-  static void _notifyDataRestored() => dataRevision.value++;
+  static void _notifyDataRestored() {
+    dataRevision.value++;
+    billsRevision.value++;
+  }
+
+  static void _notifyBillsChanged() => billsRevision.value++;
 
   static const String _billsKey = 'saved_catering_bills_store';
   static const String _activeBillIdKey = 'active_catering_bill_id';
@@ -65,6 +71,7 @@ class StorageService {
       if (cloudBill.updatedAt.isAfter(local.updatedAt)) { values[index] = cloudBill.toJson(); cloudWon = true; }
     }
     await prefs.setStringList(_billsKey, values);
+    if (cloudWon) _notifyBillsChanged();
     if (cloudWon) await _enqueueCloudSync('bill', _dateKey(cloudBill.date), cloudBill.toMap(), attemptNow: false);
   }
 
@@ -232,6 +239,7 @@ class StorageService {
       list.insert(0, bill.toJson());
     }
     await prefs.setStringList(_billsKey, list);
+    _notifyBillsChanged();
     await prefs.setString(_activeBillIdKey, bill.id);
     // Durable local-first queue: the local write finishes before cloud sync starts.
     await _enqueueCloudSync('bill', _dateKey(bill.date), bill.toMap());
@@ -260,6 +268,7 @@ class StorageService {
     final removed = list.map(CateringBill.fromJson).where((bill) => bill.id == id).toList();
     list.removeWhere((e) => CateringBill.fromJson(e).id == id);
     await prefs.setStringList(_billsKey, list);
+    _notifyBillsChanged();
     if (prefs.getString(_activeBillIdKey) == id) {
       await prefs.remove(_activeBillIdKey);
     }

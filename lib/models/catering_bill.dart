@@ -4,6 +4,8 @@ import 'staff_item.dart';
 class CateringBill {
   final String id;
   String auditoriumName;
+  String eventName;
+  int hostingCount;
   DateTime date;
   DateTime updatedAt;
   double otherExpenses;
@@ -17,6 +19,8 @@ class CateringBill {
   CateringBill({
     required this.id,
     required this.auditoriumName,
+    this.eventName = '',
+    this.hostingCount = 0,
     required this.date,
     DateTime? updatedAt,
     this.otherExpenses = 0.0,
@@ -48,6 +52,8 @@ class CateringBill {
   Map<String, dynamic> toMap() => {
         'id': id,
         'auditoriumName': auditoriumName,
+        'eventName': eventName,
+        'hostingCount': hostingCount,
         'date': date.toIso8601String(),
         'updatedAt': updatedAt.toIso8601String(),
         'otherExpenses': otherExpenses,
@@ -69,6 +75,8 @@ class CateringBill {
     return CateringBill(
       id: map['id'] ?? DateTime.now().millisecondsSinceEpoch.toString(),
       auditoriumName: map['auditoriumName'] ?? '',
+      eventName: map['eventName']?.toString() ?? '',
+      hostingCount: (map['hostingCount'] as num?)?.toInt() ?? 0,
       date: DateTime.tryParse(map['date']?.toString() ?? '') ?? DateTime.now(),
       updatedAt: DateTime.tryParse(map['updatedAt']?.toString() ?? '') ?? DateTime.tryParse(map['date']?.toString() ?? '') ?? DateTime.now(),
       otherExpenses: (map['otherExpenses'] as num?)?.toDouble() ?? 0.0,
