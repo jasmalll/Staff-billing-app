@@ -66,10 +66,13 @@ class CateringBill {
       };
 
   factory CateringBill.fromMap(Map<String, dynamic> map) {
-    Map<int, String> gpay = {};
-    if (map['groupGpay'] != null) {
-      (map['groupGpay'] as Map<String, dynamic>).forEach((k, v) {
-        gpay[int.parse(k)] = v.toString();
+    final Map<int, String> gpay = {};
+    final rawGpay = map['groupGpay'];
+    if (rawGpay is Map) {
+      // Accept JSON maps, typed maps, and legacy Map<dynamic, dynamic> values.
+      rawGpay.forEach((key, value) {
+        final groupIndex = int.tryParse(key.toString());
+        if (groupIndex != null) gpay[groupIndex] = value.toString();
       });
     }
     return CateringBill(
@@ -84,7 +87,10 @@ class CateringBill {
       otherExpenseItems: (map['otherExpenseItems'] as List<dynamic>? ?? []).whereType<Map>().map((e) => Map<String, dynamic>.from(e)).toList(),
       taMultiplier: (map['taMultiplier'] as num?)?.toDouble() ?? 3.0,
       groupSize: (map['groupSize'] as num?)?.toInt() ?? 10,
-      staffList: (map['staffList'] as List<dynamic>? ?? []).map((e) => StaffItem.fromMap(e)).toList(),
+      staffList: (map['staffList'] as List<dynamic>? ?? [])
+          .whereType<Map>()
+          .map((e) => StaffItem.fromMap(Map<String, dynamic>.from(e)))
+          .toList(),
       groupGpay: gpay,
     );
   }
