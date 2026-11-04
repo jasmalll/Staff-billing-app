@@ -259,7 +259,7 @@ class _OutingScreenState extends State<OutingScreen> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 hintText: 'Enter final TA amount', prefixText: '₹', filled: true,
-                fillColor: AppColors.background,
+                fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
               ),
             ),
@@ -276,7 +276,7 @@ class _OutingScreenState extends State<OutingScreen> {
                 hintText: 'Enter wage',
                 prefixText: '₹',
                 filled: true,
-                fillColor: AppColors.background,
+                fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
               ),
             ),
@@ -650,36 +650,14 @@ class _OutingScreenState extends State<OutingScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
-              child: Container(
-                width: double.infinity, padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [Color(0xFF172554), Color(0xFF334A78)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [BoxShadow(color: const Color(0xFF172554).withOpacity(.16), blurRadius: 18, offset: const Offset(0, 8))],
-                ),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Text('EVENT BILLING OVERVIEW', style: TextStyle(color: Color(0xFFCBD5E1), fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 1.1)),
-                  const SizedBox(height: 6),
-                  Text('₹${grandTotalBill.toStringAsFixed(0)}', style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: -.6)),
-                  const SizedBox(height: 12),
-                  Row(children: [
-                    _outingMetric('STAFF', '${widget.boysList.length + widget.spList.length + widget.cpList.length}'),
-                    _outingMetric('TOTAL TA', '₹${grandTotalTa.toStringAsFixed(0)}'),
-                    _outingMetric('EXTRAS', '₹${(widget.otherExpenses + widget.settingExpenses).toStringAsFixed(0)}'),
-                  ]),
-                ]),
-              ),
-            ),
             // Event Details Meta Card
             Container(
-              margin: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.fromLTRB(12, 5, 12, 3),
+              padding: const EdgeInsets.all(7),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: Theme.of(context).dividerColor),
                 boxShadow: [
                   BoxShadow(color: Colors.black.withOpacity(0.015), blurRadius: 4, offset: const Offset(0, 2)),
                 ],
@@ -690,19 +668,19 @@ class _OutingScreenState extends State<OutingScreen> {
                   TextField(
                     controller: _auditoriumCtrl,
                     onChanged: widget.onUpdateAuditorium,
-                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5, color: AppColors.textPrimary),
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5, color: Theme.of(context).colorScheme.onSurface),
                     decoration: InputDecoration(
                       hintText: 'Enter Auditorium / Venue Name',
-                      hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 12.5, fontWeight: FontWeight.normal),
+                      hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12.5, fontWeight: FontWeight.normal),
                       isDense: true,
-                      prefixIcon: const Icon(Icons.location_on_rounded, size: 16, color: AppColors.primary),
+                      prefixIcon: Icon(Icons.location_on_rounded, size: 16, color: Theme.of(context).colorScheme.primary),
                       contentPadding: const EdgeInsets.symmetric(vertical: 8),
                       filled: true,
-                      fillColor: AppColors.background,
+                      fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
 
                   // Date, Other Expenses, Setting Expenses Row
                   Row(
@@ -761,7 +739,7 @@ class _OutingScreenState extends State<OutingScreen> {
                             prefixStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                             isDense: true,
                             filled: true,
-                            fillColor: AppColors.background,
+                            fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                             contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
                           ),
@@ -786,7 +764,7 @@ class _OutingScreenState extends State<OutingScreen> {
                             prefixStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                             isDense: true,
                             filled: true,
-                            fillColor: AppColors.background,
+                            fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                             contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
                           ),
@@ -802,9 +780,9 @@ class _OutingScreenState extends State<OutingScreen> {
             Container(
               margin: const EdgeInsets.fromLTRB(12, 2, 12, 4),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: Theme.of(context).dividerColor),
               ),
               child: Theme(
                 data: Theme.of(context).copyWith(dividerColor: Colors.transparent),

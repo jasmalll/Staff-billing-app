@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import '../models/catering_bill.dart';
@@ -41,6 +42,45 @@ class _EventsScreenState extends State<EventsScreen> {
       _events = bills;
       _loading = false;
     });
+  }
+
+
+  Future<void> _showEventSummary(CateringBill event) async {
+    final boys = event.boys.length;
+    final sp = event.spList.length;
+    final cp = event.cpList.length;
+    final total = boys + sp + cp + event.hostingCount;
+    final summary = 'EVENT DETAILS\n\n'
+        'Event Name: ${event.eventName.isEmpty ? 'Event' : event.eventName}\n'
+        'Date: ${_date(event.date)}\n'
+        'Site: ${event.auditoriumName}\n\n'
+        'STAFF COUNT\n\n'
+        'Boys: $boys\n'
+        'SP: $sp\n'
+        'CP: $cp\n'
+        'Hosting: ${event.hostingCount}\n'
+        'Total Staff: $total\n\n'
+        'TOTAL TA: ${_money(event.getAllTotalTa(event.taMultiplier))}';
+    if (!mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Event Details'),
+        content: SelectableText(summary, style: const TextStyle(height: 1.55, fontSize: 14, fontWeight: FontWeight.w600)),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Close')),
+          FilledButton.icon(
+            onPressed: () async {
+              await Clipboard.setData(ClipboardData(text: summary));
+              if (dialogContext.mounted) Navigator.pop(dialogContext);
+              if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Event details copied')));
+            },
+            icon: const Icon(Icons.copy_rounded, size: 17),
+            label: const Text('Copy'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _showEventEditor({CateringBill? existing}) async {
@@ -159,7 +199,10 @@ class _EventsScreenState extends State<EventsScreen> {
     final total = boys + sp + cp + event.hostingCount;
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => _showEventSummary(event),
+        child: Padding(
         padding: const EdgeInsets.all(15),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
@@ -168,15 +211,19 @@ class _EventsScreenState extends State<EventsScreen> {
               onSelected: (value) {
                 if (value == 'edit') _showEventEditor(existing: event);
                 if (value == 'delete') _deleteEvent(event);
+                if (value == 'bill' && widget.onOpenBill != null) widget.onOpenBill!(event);
               },
               itemBuilder: (_) => const [
+                PopupMenuItem(value: 'bill', child: Text('Open Bill / Manage Staff')),
                 PopupMenuItem(value: 'edit', child: Text('Edit')),
                 PopupMenuItem(value: 'delete', child: Text('Delete')),
               ],
             ),
           ]),
           const SizedBox(height: 3),
-          Text('${_date(event.date)}  •  ${event.auditoriumName.isEmpty ? 'Site not set' : event.auditoriumName}', style: Theme.of(context).textTheme.bodySmall),
+          Text('SITE  •  ${event.auditoriumName.isEmpty ? 'Site not set' : event.auditoriumName}', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 3),
+          Text(_date(event.date), style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: 14),
           Row(children: [
             Expanded(child: _countTile('Boys', boys, Icons.groups_rounded)),
@@ -192,13 +239,14 @@ class _EventsScreenState extends State<EventsScreen> {
             Expanded(child: Text('Total Staff: $total', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
             Text('Total TA: ${_money(event.getAllTotalTa(event.taMultiplier))}', style: const TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF0D9488))),
           ]),
-          const SizedBox(height: 10),
-          SizedBox(width: double.infinity, child: OutlinedButton.icon(
-            onPressed: widget.onOpenBill == null ? null : () => widget.onOpenBill!(event),
-            icon: const Icon(Icons.receipt_long_rounded),
-            label: const Text('Open Bill / Manage Staff'),
-          )),
+          const SizedBox(height: 9),
+          Row(children: [
+            Icon(Icons.copy_rounded, size: 14, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(width: 5),
+            Text('Tap event to view and copy details', style: Theme.of(context).textTheme.labelSmall),
+          ]),
         ]),
+        ),
       ),
     );
   }

@@ -625,7 +625,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
             : Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 12, 14, 8),
+                    padding: const EdgeInsets.fromLTRB(14, 5, 14, 4),
                     child: Row(children: [
                       Expanded(child: _reportMetric(context, 'TOTAL STAFF', '$totalStaff', Icons.groups_rounded, const Color(0xFF64748B))),
                       const SizedBox(width: 8),
@@ -635,7 +635,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
                     ]),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
@@ -645,7 +645,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
                       children: [
                         Text(
                           '$totalStaff Staff Members',
-                          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: AppColors.textPrimary),
+                          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Theme.of(context).colorScheme.onSurface),
                         ),
                         Row(
                           children: [
@@ -688,7 +688,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
 
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                    color: const Color(0xFFF1F5F9),
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     child: const Row(
                       children: [
                         Expanded(
@@ -871,7 +871,10 @@ class _ReportingScreenState extends State<ReportingScreen> {
               .map((item) => StaffRowItem(
                     key: ValueKey(item.index),
                     item: item,
-                    onDataChanged: widget.onDataChanged,
+                    onDataChanged: () {
+                      if (mounted) setState(() {}); // Recalculate Present/Absent immediately.
+                      widget.onDataChanged();
+                    },
                     onEditDetails: () => _editNamePhoneDialog(item),
                     onEditWage: () => _editStaffWageDialog(item),
                   ))
@@ -884,14 +887,14 @@ class _ReportingScreenState extends State<ReportingScreen> {
   Widget _reportMetric(BuildContext context, String label, String value, IconData icon, Color accent) {
     final surface = Theme.of(context).colorScheme.surface;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
       decoration: BoxDecoration(
         color: surface, borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Icon(icon, color: accent, size: 18),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
         Text(value, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
         const SizedBox(height: 2),
         Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: .4, fontWeight: FontWeight.w700)),

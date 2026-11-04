@@ -33,19 +33,19 @@ class StaffBillingApp extends StatelessWidget {
       brightness: brightness,
       primary: dark ? const Color(0xFFA5B4FC) : AppColors.primary,
       secondary: const Color(0xFF0D9488),
-      surface: dark ? const Color(0xFF151F30) : Colors.white,
+      surface: dark ? const Color(0xFF080808) : Colors.white,
       error: dark ? const Color(0xFFFB7185) : AppColors.danger,
     );
-    final border = dark ? const Color(0xFF29364A) : AppColors.borderSubtle;
+    final border = dark ? const Color(0xFF333333) : AppColors.borderSubtle;
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
       colorScheme: scheme,
-      scaffoldBackgroundColor: dark ? const Color(0xFF0B1220) : AppColors.background,
+      scaffoldBackgroundColor: dark ? const Color(0xFF000000) : AppColors.background,
       primaryColor: scheme.primary,
       visualDensity: VisualDensity.standard,
       appBarTheme: AppBarTheme(
-        backgroundColor: dark ? const Color(0xFF111B2B) : AppColors.primary,
+        backgroundColor: dark ? const Color(0xFF000000) : AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 0, scrolledUnderElevation: 0, centerTitle: false,
         titleSpacing: 20, toolbarHeight: 66,
@@ -54,7 +54,7 @@ class StaffBillingApp extends StatelessWidget {
       ),
       cardTheme: CardThemeData(color: scheme.surface, elevation: 0, margin: EdgeInsets.zero, surfaceTintColor: Colors.transparent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18), side: BorderSide(color: border))),
       inputDecorationTheme: InputDecorationTheme(
-        filled: true, fillColor: dark ? const Color(0xFF1B293C) : const Color(0xFFF8FAFC),
+        filled: true, fillColor: dark ? const Color(0xFF151515) : const Color(0xFFF8FAFC),
         contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         hintStyle: TextStyle(color: dark ? const Color(0xFF94A3B8) : AppColors.textMuted, fontSize: 14),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: BorderSide(color: border)),

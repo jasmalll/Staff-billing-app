@@ -58,12 +58,10 @@ class _StaffRowItemState extends State<StaffRowItem> {
 
   void _cycleAttendance() {
     setState(() {
-      if (widget.item.attendance == '') {
-        widget.item.attendance = '✅';
-      } else if (widget.item.attendance == '✅') {
+      if (widget.item.attendance == '✅') {
         widget.item.attendance = '🔴';
       } else {
-        widget.item.attendance = '';
+        widget.item.attendance = '✅';
       }
     });
     widget.onDataChanged();
@@ -71,12 +69,12 @@ class _StaffRowItemState extends State<StaffRowItem> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isAbsent = widget.item.attendance == '🔴';
+    final bool isAbsent = widget.item.attendance != '✅';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: AppColors.borderSubtle)),
+        border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
       ),
       child: Row(
         children: [
@@ -96,7 +94,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 12.5,
-                            color: isAbsent ? AppColors.textMuted : AppColors.textPrimary,
+                            color: isAbsent ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.onSurface,
                             decoration: isAbsent ? TextDecoration.lineThrough : TextDecoration.none,
                           ),
                           maxLines: 1,
@@ -150,18 +148,14 @@ class _StaffRowItemState extends State<StaffRowItem> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: widget.item.attendance == '✅'
-                    ? AppColors.successLight
-                    : (isAbsent ? AppColors.dangerLight : const Color(0xFFF8FAFC)),
+                    ? (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF123A27) : AppColors.successLight)
+                    : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF3A171B) : AppColors.dangerLight),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: widget.item.attendance == '✅'
-                      ? const Color(0xFF86EFAC)
-                      : (isAbsent ? const Color(0xFFFCA5A5) : AppColors.border),
+                  color: widget.item.attendance == '✅' ? const Color(0xFF4ADE80) : const Color(0xFFFB7185),
                 ),
               ),
-              child: widget.item.attendance.isEmpty
-                  ? const Text('—', style: TextStyle(color: AppColors.textMuted, fontSize: 13, fontWeight: FontWeight.bold))
-                  : Text(widget.item.attendance, style: const TextStyle(fontSize: 13)),
+              child: Text(isAbsent ? '🔴' : '✅', style: const TextStyle(fontSize: 13)),
             ),
           ),
           const SizedBox(width: 8),
@@ -176,9 +170,6 @@ class _StaffRowItemState extends State<StaffRowItem> {
               textAlign: TextAlign.center,
               onChanged: (val) {
                 widget.item.baseTa = double.tryParse(val.trim()) ?? 0.0;
-                if (widget.item.attendance == '' && widget.item.baseTa > 0) {
-                  setState(() => widget.item.attendance = '✅');
-                }
                 widget.onDataChanged();
               },
               style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.success),
@@ -211,7 +202,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
               child: Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF1F5F9),
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(color: const Color(0xFFCBD5E1)),
                 ),
