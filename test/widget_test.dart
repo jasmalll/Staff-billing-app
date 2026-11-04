@@ -125,20 +125,22 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const StaffBillingApp());
     await tester.pumpAndSettle();
-    final dashboardDestination = find.widgetWithText(NavigationDestination, 'Dashboard');
-    expect(dashboardDestination, findsOneWidget);
-    final navigationBar = tester.widget<NavigationBar>(find.byType(NavigationBar));
-    expect(navigationBar.selectedIndex, 3);
+    expect(find.text('Dashboard'), findsWidgets);
+    expect(find.byTooltip('More'), findsOneWidget);
+    expect(find.text('Reporting'), findsAtLeastNWidgets(1));
+    expect(find.text('Outing'), findsAtLeastNWidgets(1));
+    expect(find.text('Manage'), findsAtLeastNWidgets(1));
+    expect(find.text('Events'), findsAtLeastNWidgets(1));
   });
 
-  testWidgets('app shows all six main sections', (WidgetTester tester) async {
+  testWidgets('app keeps all six screens accessible with Calendar in More', (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const StaffBillingApp());
     await tester.pumpAndSettle();
     expect(find.text('Reporting'), findsAtLeastNWidgets(1));
     expect(find.text('Outing'), findsAtLeastNWidgets(1));
-    expect(find.text('Calendar'), findsAtLeastNWidgets(1));
     expect(find.text('Dashboard'), findsAtLeastNWidgets(1));
+    expect(find.byTooltip('More'), findsOneWidget);
     expect(find.text('Manage'), findsAtLeastNWidgets(1));
     expect(find.text('Events'), findsAtLeastNWidgets(1));
   });

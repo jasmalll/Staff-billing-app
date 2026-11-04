@@ -196,7 +196,7 @@ class _OutingScreenState extends State<OutingScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(ctx).colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text('Edit Wage for #${item.index} ${item.name}', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
         content: Column(
@@ -372,18 +372,18 @@ class _OutingScreenState extends State<OutingScreen> {
       builder: (ctx) => SafeArea(
         child: Container(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+          decoration: BoxDecoration(
+            color: Theme.of(ctx).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(width: 38, height: 4, decoration: BoxDecoration(color: const Color(0xFFCBD5E1), borderRadius: BorderRadius.circular(8))),
               const SizedBox(height: 14),
-              const Text('WhatsApp Copy Format', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+              Text('WhatsApp Copy Format', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: Theme.of(ctx).colorScheme.onSurface)),
               const SizedBox(height: 6),
-              const Text('Choose what you want to copy', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+              Text('Choose what you want to copy', style: TextStyle(fontSize: 12, color: Theme.of(ctx).colorScheme.onSurfaceVariant)),
               const SizedBox(height: 14),
               ListTile(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: const BorderSide(color: AppColors.border)),
@@ -529,7 +529,7 @@ class _OutingScreenState extends State<OutingScreen> {
                   child: const Icon(Icons.receipt_long_rounded, size: 48, color: AppColors.textMuted),
                 ),
                 const SizedBox(height: 16),
-                const Text('No Active Roster Found', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                Text('No Active Roster Found', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
                 const SizedBox(height: 6),
                 const Text('Please add your staff list in the Reporting tab to perform billing.', textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
               ],
@@ -652,8 +652,8 @@ class _OutingScreenState extends State<OutingScreen> {
           children: [
             // Event Details Meta Card
             Container(
-              margin: const EdgeInsets.fromLTRB(12, 5, 12, 3),
-              padding: const EdgeInsets.all(7),
+              margin: const EdgeInsets.fromLTRB(12, 3, 12, 2),
+              padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
@@ -680,7 +680,7 @@ class _OutingScreenState extends State<OutingScreen> {
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 3),
 
                   // Date, Other Expenses, Setting Expenses Row
                   Row(
@@ -699,9 +699,9 @@ class _OutingScreenState extends State<OutingScreen> {
                             if (picked != null) widget.onUpdateDate(picked);
                           },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                             decoration: BoxDecoration(
-                              color: AppColors.background,
+                              color: Theme.of(context).colorScheme.surfaceContainerHighest,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
@@ -711,7 +711,7 @@ class _OutingScreenState extends State<OutingScreen> {
                                 Flexible(
                                   child: Text(
                                     DateFormat('dd MMM yy').format(widget.eventDate),
-                                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11.5, color: AppColors.textPrimary),
+                                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 11.5, color: Theme.of(context).colorScheme.onSurface),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -732,7 +732,7 @@ class _OutingScreenState extends State<OutingScreen> {
                           onChanged: (val) {
                             widget.onUpdateOtherExp(double.tryParse(val.trim()) ?? 0.0);
                           },
-                          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11.5, color: AppColors.textPrimary),
+                          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 11.5, color: Theme.of(context).colorScheme.onSurface),
                           decoration: InputDecoration(
                             hintText: '0',
                             prefixText: 'Other:',
@@ -757,7 +757,7 @@ class _OutingScreenState extends State<OutingScreen> {
                           onChanged: (val) {
                             widget.onUpdateSettingExp(double.tryParse(val.trim()) ?? 0.0);
                           },
-                          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11.5, color: AppColors.textPrimary),
+                          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 11.5, color: Theme.of(context).colorScheme.onSurface),
                           decoration: InputDecoration(
                             hintText: '0',
                             prefixText: 'Setting:',
@@ -883,9 +883,9 @@ class _OutingScreenState extends State<OutingScreen> {
                     return Container(
                       margin: const EdgeInsets.only(bottom: 14),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: Theme.of(context).dividerColor),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -929,9 +929,9 @@ class _OutingScreenState extends State<OutingScreen> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: const BoxDecoration(
-                              color: Color(0xFFF8FAFC),
-                              borderRadius: BorderRadius.vertical(bottom: Radius.circular(11)),
-                              border: Border(top: BorderSide(color: AppColors.borderSubtle)),
+                              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(11)),
+                              border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
                             ),
                             child: Column(
                               children: [
@@ -947,7 +947,7 @@ class _OutingScreenState extends State<OutingScreen> {
                                   controller: _gpayControllers[gIdx],
                                   keyboardType: TextInputType.phone,
                                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
                                   onChanged: (val) {
                                     widget.groupGpay[gIdx] = val.trim();
                                     widget.onDataChanged();
@@ -957,7 +957,7 @@ class _OutingScreenState extends State<OutingScreen> {
                                     hintStyle: const TextStyle(fontSize: 11, color: AppColors.textMuted),
                                     isDense: true,
                                     filled: true,
-                                    fillColor: Colors.white,
+                                    fillColor: Theme.of(context).colorScheme.surface,
                                     prefixIcon: const Icon(Icons.account_balance_wallet_outlined, size: 16, color: AppColors.primary),
                                     contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                     enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: AppColors.border)),
@@ -989,8 +989,8 @@ class _OutingScreenState extends State<OutingScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: Colors.white,
-                border: const Border(top: BorderSide(color: AppColors.border)),
+                color: Theme.of(context).colorScheme.surface,
+                border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
                 boxShadow: [
                   BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10, offset: const Offset(0, -3)),
                 ],
@@ -1032,9 +1032,9 @@ class _OutingScreenState extends State<OutingScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

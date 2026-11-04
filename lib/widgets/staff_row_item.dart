@@ -69,12 +69,16 @@ class _StaffRowItemState extends State<StaffRowItem> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final dividerColor = theme.dividerColor;
+    final onSurface = theme.colorScheme.onSurface;
+    final onSurfaceVariant = theme.colorScheme.onSurfaceVariant;
     final bool isAbsent = widget.item.attendance != '✅';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
+        border: Border(bottom: BorderSide(color: dividerColor)),
       ),
       child: Row(
         children: [
@@ -94,7 +98,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 12.5,
-                            color: isAbsent ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.onSurface,
+                            color: isAbsent ? onSurfaceVariant : onSurface,
                             decoration: isAbsent ? TextDecoration.lineThrough : TextDecoration.none,
                           ),
                           maxLines: 1,

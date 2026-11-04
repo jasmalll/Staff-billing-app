@@ -93,9 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: 18),
             Card(
               clipBehavior: Clip.antiAlias,
-              child: InkWell(
-                onTap: widget.onOpenEvents,
-                child: Padding(
+              child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(children: [
@@ -105,7 +103,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       const Text('Event Management', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
                       Text('${_bills.length} saved events · Staff counts & Total TA', style: theme.textTheme.bodySmall),
                     ])),
-                    Icon(Icons.arrow_forward_ios_rounded, size: 16, color: theme.colorScheme.primary),
                   ]),
                   const SizedBox(height: 12),
                   Row(children: [
@@ -115,7 +112,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Expanded(child: _quickCount('Hosting', _bills.fold<int>(0, (v, b) => v + b.hostingCount))),
                   ]),
                 ]),
-              ),
               ),
             ),
             const SizedBox(height: 22),

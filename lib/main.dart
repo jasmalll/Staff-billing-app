@@ -33,19 +33,19 @@ class StaffBillingApp extends StatelessWidget {
       brightness: brightness,
       primary: dark ? const Color(0xFFA5B4FC) : AppColors.primary,
       secondary: const Color(0xFF0D9488),
-      surface: dark ? const Color(0xFF080808) : Colors.white,
+      surface: dark ? const Color(0xFF151C2E) : Colors.white,
       error: dark ? const Color(0xFFFB7185) : AppColors.danger,
     );
-    final border = dark ? const Color(0xFF333333) : AppColors.borderSubtle;
+    final border = dark ? const Color(0xFF29344B) : AppColors.borderSubtle;
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
       colorScheme: scheme,
-      scaffoldBackgroundColor: dark ? const Color(0xFF000000) : AppColors.background,
+      scaffoldBackgroundColor: dark ? const Color(0xFF080B14) : AppColors.background,
       primaryColor: scheme.primary,
       visualDensity: VisualDensity.standard,
       appBarTheme: AppBarTheme(
-        backgroundColor: dark ? const Color(0xFF000000) : AppColors.primary,
+        backgroundColor: dark ? const Color(0xFF080B14) : AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 0, scrolledUnderElevation: 0, centerTitle: false,
         titleSpacing: 20, toolbarHeight: 66,
@@ -54,7 +54,7 @@ class StaffBillingApp extends StatelessWidget {
       ),
       cardTheme: CardThemeData(color: scheme.surface, elevation: 0, margin: EdgeInsets.zero, surfaceTintColor: Colors.transparent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18), side: BorderSide(color: border))),
       inputDecorationTheme: InputDecorationTheme(
-        filled: true, fillColor: dark ? const Color(0xFF151515) : const Color(0xFFF8FAFC),
+        filled: true, fillColor: dark ? const Color(0xFF151C2E) : const Color(0xFFF8FAFC),
         contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         hintStyle: TextStyle(color: dark ? const Color(0xFF94A3B8) : AppColors.textMuted, fontSize: 14),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(13), borderSide: BorderSide(color: border)),
@@ -266,7 +266,12 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         spList: sharedSpList,
         cpList: sharedCpList,
         onListParsed: _onListParsed,
-        onDataChanged: _triggerAutoSave,
+        onDataChanged: () {
+          // Attendance and wage edits affect sibling screens in the IndexedStack
+          // (especially the live Present/Absent rows in Outing).
+          setState(() {});
+          _triggerAutoSave();
+        },
         onStartNewWork: _startNewWork,
         onSubmitToOuting: () {
           _triggerAutoSave();
@@ -327,78 +332,106 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       EventsScreen(onOpenBill: _loadExistingBillFromCalendar),
     ];
 
+    final destinations = <({int page, String label, IconData icon})>[
+      (page: 0, label: 'Reporting', icon: Icons.edit_note_rounded),
+      (page: 1, label: 'Outing', icon: Icons.receipt_long_rounded),
+      (page: 3, label: 'Dashboard', icon: Icons.dashboard_rounded),
+      (page: 4, label: 'Manage', icon: Icons.grid_view_rounded),
+      (page: 5, label: 'Events', icon: Icons.event_note_rounded),
+    ];
+    final selected = destinations.indexWhere((item) => item.page == _currentIndex);
+
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: pages,
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          border: Border(top: BorderSide(color: Theme.of(context).dividerColor, width: 1)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 10,
-              offset: const Offset(0, -3),
-            ),
-          ],
-        ),
-        child: NavigationBarTheme(
-          data: NavigationBarThemeData(
-            indicatorColor: Theme.of(context).colorScheme.primary,
-            iconTheme: WidgetStateProperty.resolveWith<IconThemeData>((states) {
-              if (states.contains(WidgetState.selected)) {
-                return IconThemeData(color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF0B1220) : Colors.white, size: 22);
-              }
-              return IconThemeData(color: Theme.of(context).colorScheme.onSurfaceVariant, size: 22);
-            }),
-            labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
-              if (states.contains(WidgetState.selected)) {
-                return TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 11.5,
-                );
-              }
-              return TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w500,
-                fontSize: 11.5,
-              );
-            }),
+      body: IndexedStack(index: _currentIndex, children: pages),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(5, 7, 5, 5),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: .12), blurRadius: 16, offset: const Offset(0, -4))],
           ),
-          child: NavigationBar(
-            height: 72,
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            surfaceTintColor: Colors.transparent,
-            elevation: 0,
-            selectedIndex: _currentIndex,
-            onDestinationSelected: (index) {
-              _triggerAutoSave();
-              setState(() => _currentIndex = index);
-            },
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.edit_note_rounded),
-                selectedIcon: Icon(Icons.edit_note_rounded),
-                label: 'Reporting',
+          child: Row(
+            children: [
+              for (var i = 0; i < destinations.length; i++)
+                Expanded(
+                  child: _buildNavigationItem(
+                    icon: destinations[i].icon,
+                    label: destinations[i].label,
+                    selected: selected == i,
+                    onTap: () {
+                      _triggerAutoSave();
+                      setState(() => _currentIndex = destinations[i].page);
+                    },
+                  ),
+                ),
+              SizedBox(
+                width: 48,
+                child: IconButton(
+                  tooltip: 'More',
+                  onPressed: _showMoreMenu,
+                  icon: Icon(Icons.more_horiz_rounded, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 25),
+                ),
               ),
-              NavigationDestination(
-                icon: Icon(Icons.receipt_long_rounded),
-                selectedIcon: Icon(Icons.receipt_long_rounded),
-                label: 'Outing',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.calendar_month_rounded),
-                selectedIcon: Icon(Icons.calendar_month_rounded),
-                label: 'Calendar',
-              ),
-              NavigationDestination(icon: Icon(Icons.dashboard_rounded), selectedIcon: Icon(Icons.dashboard_rounded), label: 'Dashboard'),
-              NavigationDestination(icon: Icon(Icons.grid_view_rounded), selectedIcon: Icon(Icons.grid_view_rounded), label: 'Manage'),
-              NavigationDestination(icon: Icon(Icons.event_note_rounded), selectedIcon: Icon(Icons.event_note_rounded), label: 'Events'),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavigationItem({required IconData icon, required String label, required bool selected, required VoidCallback onTap}) {
+    final color = selected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurfaceVariant;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
+          decoration: BoxDecoration(
+            color: selected ? Theme.of(context).colorScheme.primary.withValues(alpha: .13) : Colors.transparent,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Icon(icon, size: 21, color: color),
+            const SizedBox(height: 3),
+            Text(label, maxLines: 1, overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 10.5, fontWeight: selected ? FontWeight.w800 : FontWeight.w500, color: color)),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  void _showMoreMenu() {
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      builder: (sheetContext) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(18, 4, 18, 22),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Align(alignment: Alignment.centerLeft, child: Text('More', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800))),
+            const SizedBox(height: 12),
+            ListTile(
+              leading: Icon(Icons.calendar_month_rounded, color: Theme.of(context).colorScheme.primary),
+              title: const Text('Calendar', style: TextStyle(fontWeight: FontWeight.w700)),
+              subtitle: const Text('View saved events by date'),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                _triggerAutoSave();
+                setState(() => _currentIndex = 2);
+              },
+            ),
+          ]),
         ),
       ),
     );
