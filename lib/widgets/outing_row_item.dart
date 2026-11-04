@@ -35,7 +35,7 @@ class OutingRowItem extends StatelessWidget {
         color: AppColors.dangerLight.withOpacity(0.4),
         child: Row(
           children: [
-            Text('${item.index}. ${item.name}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+            Text('${item.index}. ${item.name}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
             const Spacer(),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -52,7 +52,7 @@ class OutingRowItem extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
       ),
       child: Row(
@@ -65,7 +65,7 @@ class OutingRowItem extends StatelessWidget {
               children: [
                 Text(
                   '${item.index}. ${item.name}',
-                  style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5, color: Theme.of(context).colorScheme.onSurface),
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5, color: Theme.of(context).colorScheme.onSurface),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
