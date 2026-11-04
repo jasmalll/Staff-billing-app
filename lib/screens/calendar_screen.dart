@@ -121,7 +121,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             Text('JSON Backup / Restore', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
           ],
         ),
-        content: const Text(
+        content: Text(
           'Export a JSON backup file, then save it in Downloads or Google Drive. To recover data, choose the saved JSON file with Restore.',
           style: TextStyle(fontSize: 13, height: 1.4, color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
