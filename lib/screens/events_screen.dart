@@ -51,9 +51,9 @@ class _EventsScreenState extends State<EventsScreen> {
     final cp = event.cpList.length;
     final total = boys + sp + cp + event.hostingCount;
     final summary = 'EVENT DETAILS\n\n'
-        'Site name: ${event.auditoriumName.isEmpty ? 'Not set' : event.auditoriumName}\n'
+        'Event Name: ${event.eventName.isEmpty ? 'Event' : event.eventName}\n'
         'Date: ${_date(event.date)}\n'
-        'Event: ${event.eventName.isEmpty ? 'Event' : event.eventName}\n\n'
+        'Site: ${event.auditoriumName}\n\n'
         'STAFF COUNT\n\n'
         'Boys: $boys\n'
         'SP: $sp\n'
@@ -193,73 +193,60 @@ class _EventsScreenState extends State<EventsScreen> {
   }
 
   Widget _eventCard(CateringBill event) {
+    final boys = event.boys.length;
+    final sp = event.spList.length;
+    final cp = event.cpList.length;
+    final total = boys + sp + cp + event.hostingCount;
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () => _showEventSummary(event),
-        borderRadius: BorderRadius.circular(18),
         child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Row(
-            children: [
-              Expanded(
-                child: _eventInfoTile(
-                  icon: Icons.location_on_rounded,
-                  label: 'SITE NAME',
-                  value: event.auditoriumName.isEmpty ? 'Site not set' : event.auditoriumName,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _eventInfoTile(
-                  icon: Icons.calendar_month_rounded,
-                  label: 'DATE',
-                  value: _date(event.date),
-                ),
-              ),
-              PopupMenuButton<String>(
-                tooltip: 'Event actions',
-                onSelected: (value) {
-                  if (value == 'bill' && widget.onOpenBill != null) widget.onOpenBill!(event);
-                  if (value == 'edit') _showEventEditor(existing: event);
-                  if (value == 'delete') _deleteEvent(event);
-                },
-                itemBuilder: (_) => const [
-                  PopupMenuItem(value: 'bill', child: Text('Open Bill / Manage Staff')),
-                  PopupMenuItem(value: 'edit', child: Text('Edit')),
-                  PopupMenuItem(value: 'delete', child: Text('Delete')),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _eventInfoTile({required IconData icon, required String label, required String value}) {
-    return Container(
-      constraints: const BoxConstraints(minHeight: 82),
-      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: .45),
-        borderRadius: BorderRadius.circular(13),
-        border: Border.all(color: Theme.of(context).dividerColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        padding: const EdgeInsets.all(15),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
-            Icon(icon, size: 15, color: Theme.of(context).colorScheme.primary),
-            const SizedBox(width: 5),
-            Text(label, style: Theme.of(context).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w800, letterSpacing: .5)),
+            Expanded(child: Text(event.eventName.isEmpty ? 'Event' : event.eventName, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800))),
+            PopupMenuButton<String>(
+              onSelected: (value) {
+                if (value == 'edit') _showEventEditor(existing: event);
+                if (value == 'delete') _deleteEvent(event);
+                if (value == 'bill' && widget.onOpenBill != null) widget.onOpenBill!(event);
+              },
+              itemBuilder: (_) => const [
+                PopupMenuItem(value: 'bill', child: Text('Open Bill / Manage Staff')),
+                PopupMenuItem(value: 'edit', child: Text('Edit')),
+                PopupMenuItem(value: 'delete', child: Text('Delete')),
+              ],
+            ),
           ]),
-          const SizedBox(height: 7),
-          Text(value, maxLines: 2, overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800)),
-        ],
+          const SizedBox(height: 3),
+          Text('SITE  •  ${event.auditoriumName.isEmpty ? 'Site not set' : event.auditoriumName}', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 3),
+          Text(_date(event.date), style: Theme.of(context).textTheme.bodySmall),
+          const SizedBox(height: 14),
+          Row(children: [
+            Expanded(child: _countTile('Boys', boys, Icons.groups_rounded)),
+            const SizedBox(width: 7),
+            Expanded(child: _countTile('SP', sp, Icons.supervisor_account_rounded)),
+            const SizedBox(width: 7),
+            Expanded(child: _countTile('CP', cp, Icons.badge_rounded)),
+            const SizedBox(width: 7),
+            Expanded(child: _countTile('Hosting', event.hostingCount, Icons.room_service_rounded)),
+          ]),
+          const SizedBox(height: 12),
+          Row(children: [
+            Expanded(child: Text('Total Staff: $total', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
+            Text('Total TA: ${_money(event.getAllTotalTa(event.taMultiplier))}', style: const TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF0D9488))),
+          ]),
+          const SizedBox(height: 9),
+          Row(children: [
+            Icon(Icons.copy_rounded, size: 14, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(width: 5),
+            Text('Tap event to view and copy details', style: Theme.of(context).textTheme.labelSmall),
+          ]),
+        ]),
+        ),
       ),
     );
   }

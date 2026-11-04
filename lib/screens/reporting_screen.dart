@@ -625,7 +625,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
             : Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 3, 12, 2),
+                    padding: const EdgeInsets.fromLTRB(14, 5, 14, 4),
                     child: Row(children: [
                       Expanded(child: _reportMetric(context, 'TOTAL STAFF', '$totalStaff', Icons.groups_rounded, const Color(0xFF64748B))),
                       const SizedBox(width: 8),
@@ -635,7 +635,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
                     ]),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
@@ -687,7 +687,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
                   ),
 
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                     color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     child: const Row(
                       children: [
@@ -887,7 +887,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
   Widget _reportMetric(BuildContext context, String label, String value, IconData icon, Color accent) {
     final surface = Theme.of(context).colorScheme.surface;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
       decoration: BoxDecoration(
         color: surface, borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Theme.of(context).dividerColor),

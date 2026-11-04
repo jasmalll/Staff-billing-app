@@ -112,7 +112,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Row(
           children: [
@@ -155,7 +155,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('Delete Event Bill?', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
         content: Text(
@@ -250,7 +250,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   ),
                                   Text(
                                     DateFormat('MMMM yyyy').format(selectedMonth),
-                                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Theme.of(context).colorScheme.onSurface),
+                                    style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: AppColors.textPrimary),
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.chevron_right_rounded, size: 22),
@@ -322,7 +322,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                             style: TextStyle(
                                               fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                                               fontSize: 12,
-                                              color: isSelected ? Colors.white : Theme.of(context).colorScheme.onSurface,
+                                              color: isSelected ? Colors.white : AppColors.textPrimary,
                                             ),
                                           ),
                                           if (hasBills)
@@ -354,12 +354,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           children: [
                             Text(
                               DateFormat('dd MMMM yyyy').format(selectedDate),
-                              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.5, color: Theme.of(context).colorScheme.onSurface),
+                              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13.5, color: AppColors.textPrimary),
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
-                                color: billsForSelectedDate.isEmpty ? Theme.of(context).colorScheme.surfaceContainerHighest : AppColors.successLight,
+                                color: billsForSelectedDate.isEmpty ? const Color(0xFFF1F5F9) : AppColors.successLight,
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(
@@ -369,7 +369,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w700,
-                                  color: billsForSelectedDate.isEmpty ? Theme.of(context).colorScheme.onSurfaceVariant : AppColors.success,
+                                  color: billsForSelectedDate.isEmpty ? AppColors.textSecondary : AppColors.success,
                                 ),
                               ),
                             ),
@@ -410,9 +410,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             return Container(
                               margin: const EdgeInsets.only(bottom: 10),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.surface,
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(14),
-                                border: Border.all(color: Theme.of(context).dividerColor),
+                                border: Border.all(color: AppColors.border),
                                 boxShadow: [
                                   BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2)),
                                 ],
@@ -432,7 +432,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                             Expanded(
                                               child: Text(
                                                 b.auditoriumName.isEmpty ? 'Catering Event' : b.auditoriumName,
-                                                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Theme.of(context).colorScheme.onSurface),
+                                                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: AppColors.textPrimary),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
