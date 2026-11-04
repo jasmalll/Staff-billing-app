@@ -108,10 +108,10 @@ void main() {
     expect(after..remove('exportedAt'), before..remove('exportedAt'));
   });
 
-  test('theme preference persists light, dark and system modes', () async {
+  test('theme defaults to premium dark and persists explicit light/dark modes', () async {
     SharedPreferences.setMockInitialValues({});
     await ThemeService.load();
-    expect(ThemeService.mode.value, ThemeMode.system);
+    expect(ThemeService.mode.value, ThemeMode.dark);
     await ThemeService.setMode(ThemeMode.dark);
     expect(ThemeService.mode.value, ThemeMode.dark);
     await ThemeService.load();
@@ -125,10 +125,9 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const StaffBillingApp());
     await tester.pumpAndSettle();
-    final dashboardDestination = find.widgetWithText(NavigationDestination, 'Dashboard');
-    expect(dashboardDestination, findsOneWidget);
-    final navigationBar = tester.widget<NavigationBar>(find.byType(NavigationBar));
-    expect(navigationBar.selectedIndex, 3);
+    expect(find.text('Dashboard'), findsAtLeastNWidgets(1));
+    expect(find.byTooltip('More'), findsOneWidget);
+    expect(find.byType(NavigationBar), findsNothing);
   });
 
   testWidgets('app shows all six main sections', (WidgetTester tester) async {
@@ -137,9 +136,11 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Reporting'), findsAtLeastNWidgets(1));
     expect(find.text('Outing'), findsAtLeastNWidgets(1));
-    expect(find.text('Calendar'), findsAtLeastNWidgets(1));
     expect(find.text('Dashboard'), findsAtLeastNWidgets(1));
     expect(find.text('Manage'), findsAtLeastNWidgets(1));
     expect(find.text('Events'), findsAtLeastNWidgets(1));
+    await tester.tap(find.byTooltip('More'));
+    await tester.pumpAndSettle();
+    expect(find.text('Calendar'), findsOneWidget);
   });
 }

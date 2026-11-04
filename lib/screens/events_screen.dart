@@ -51,9 +51,9 @@ class _EventsScreenState extends State<EventsScreen> {
     final cp = event.cpList.length;
     final total = boys + sp + cp + event.hostingCount;
     final summary = 'EVENT DETAILS\n\n'
-        'Event Name: ${event.eventName.isEmpty ? 'Event' : event.eventName}\n'
+        'Site name : ${event.auditoriumName.isEmpty ? 'Site not set' : event.auditoriumName}\n'
         'Date: ${_date(event.date)}\n'
-        'Site: ${event.auditoriumName}\n\n'
+        'Event: ${event.eventName.isEmpty ? 'Event' : event.eventName}\n\n'
         'STAFF COUNT\n\n'
         'Boys: $boys\n'
         'SP: $sp\n'
@@ -176,76 +176,57 @@ class _EventsScreenState extends State<EventsScreen> {
     }
   }
 
-  Widget _countTile(String label, int count, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 11),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(.45),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(children: [
-        Icon(icon, size: 18, color: Theme.of(context).colorScheme.primary),
-        const SizedBox(height: 5),
-        Text('$count', style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
-        Text(label, style: Theme.of(context).textTheme.labelSmall),
-      ]),
-    );
-  }
-
   Widget _eventCard(CateringBill event) {
-    final boys = event.boys.length;
-    final sp = event.spList.length;
-    final cp = event.cpList.length;
-    final total = boys + sp + cp + event.hostingCount;
+    final scheme = Theme.of(context).colorScheme;
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () => _showEventSummary(event),
         child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(children: [
-            Expanded(child: Text(event.eventName.isEmpty ? 'Event' : event.eventName, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800))),
-            PopupMenuButton<String>(
-              onSelected: (value) {
-                if (value == 'edit') _showEventEditor(existing: event);
-                if (value == 'delete') _deleteEvent(event);
-                if (value == 'bill' && widget.onOpenBill != null) widget.onOpenBill!(event);
-              },
-              itemBuilder: (_) => const [
-                PopupMenuItem(value: 'bill', child: Text('Open Bill / Manage Staff')),
-                PopupMenuItem(value: 'edit', child: Text('Edit')),
-                PopupMenuItem(value: 'delete', child: Text('Delete')),
-              ],
-            ),
-          ]),
-          const SizedBox(height: 3),
-          Text('SITE  •  ${event.auditoriumName.isEmpty ? 'Site not set' : event.auditoriumName}', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
-          const SizedBox(height: 3),
-          Text(_date(event.date), style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 14),
-          Row(children: [
-            Expanded(child: _countTile('Boys', boys, Icons.groups_rounded)),
-            const SizedBox(width: 7),
-            Expanded(child: _countTile('SP', sp, Icons.supervisor_account_rounded)),
-            const SizedBox(width: 7),
-            Expanded(child: _countTile('CP', cp, Icons.badge_rounded)),
-            const SizedBox(width: 7),
-            Expanded(child: _countTile('Hosting', event.hostingCount, Icons.room_service_rounded)),
-          ]),
-          const SizedBox(height: 12),
-          Row(children: [
-            Expanded(child: Text('Total Staff: $total', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
-            Text('Total TA: ${_money(event.getAllTotalTa(event.taMultiplier))}', style: const TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF0D9488))),
-          ]),
-          const SizedBox(height: 9),
-          Row(children: [
-            Icon(Icons.copy_rounded, size: 14, color: Theme.of(context).colorScheme.primary),
-            const SizedBox(width: 5),
-            Text('Tap event to view and copy details', style: Theme.of(context).textTheme.labelSmall),
-          ]),
-        ]),
+          padding: const EdgeInsets.fromLTRB(13, 13, 9, 13),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(children: [
+                Icon(Icons.location_on_rounded, size: 17, color: scheme.primary),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: Text(
+                    event.auditoriumName.isEmpty ? 'Site not set' : event.auditoriumName,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, height: 1.2),
+                  ),
+                ),
+                PopupMenuButton<String>(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(minWidth: 180),
+                  icon: Icon(Icons.more_vert_rounded, size: 19, color: scheme.onSurfaceVariant),
+                  onSelected: (value) {
+                    if (value == 'edit') _showEventEditor(existing: event);
+                    if (value == 'delete') _deleteEvent(event);
+                    if (value == 'bill' && widget.onOpenBill != null) widget.onOpenBill!(event);
+                  },
+                  itemBuilder: (_) => const [
+                    PopupMenuItem(value: 'bill', child: Text('Open Bill / Manage Staff')),
+                    PopupMenuItem(value: 'edit', child: Text('Edit')),
+                    PopupMenuItem(value: 'delete', child: Text('Delete')),
+                  ],
+                ),
+              ]),
+              const SizedBox(height: 9),
+              Row(children: [
+                Icon(Icons.calendar_today_rounded, size: 14, color: scheme.onSurfaceVariant),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(_date(event.date), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: scheme.onSurfaceVariant)),
+                ),
+              ]),
+              const SizedBox(height: 7),
+              Text('Tap to view details', style: TextStyle(fontSize: 10, color: scheme.primary, fontWeight: FontWeight.w700)),
+            ],
+          ),
         ),
       ),
     );
@@ -275,8 +256,14 @@ class _EventsScreenState extends State<EventsScreen> {
                 ))
               : RefreshIndicator(
                   onRefresh: _load,
-                  child: ListView.builder(
+                  child: GridView.builder(
                     padding: const EdgeInsets.fromLTRB(14, 14, 14, 100),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 1.35,
+                    ),
                     itemCount: _events.length,
                     itemBuilder: (context, index) => _eventCard(_events[index]),
                   ),

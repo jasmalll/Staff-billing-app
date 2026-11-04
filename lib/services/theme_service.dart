@@ -8,11 +8,11 @@ class ThemeService {
 
   static Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
-    final value = prefs.getString(_key) ?? 'system';
+    final value = prefs.getString(_key) ?? 'dark';
     mode.value = switch (value) {
       'light' => ThemeMode.light,
       'dark' => ThemeMode.dark,
-      _ => ThemeMode.system,
+      _ => ThemeMode.dark,
     };
   }
 

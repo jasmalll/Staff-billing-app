@@ -929,7 +929,7 @@ class _OutingScreenState extends State<OutingScreen> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF8FAFC),
+                              color: Color(0xFFF8FAFC),
                               borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(11),
                                 bottomRight: Radius.circular(11),
