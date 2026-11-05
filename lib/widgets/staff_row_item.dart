@@ -72,7 +72,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
     final bool isAbsent = widget.item.attendance != '✅';
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
       ),
@@ -170,6 +170,11 @@ class _StaffRowItemState extends State<StaffRowItem> {
               textAlign: TextAlign.center,
               onChanged: (val) {
                 widget.item.baseTa = double.tryParse(val.trim()) ?? 0.0;
+                // A positive TA is an attendance signal. Only transition absent/blank
+                // staff to present; repeated keystrokes do not create extra updates.
+                if (widget.item.baseTa > 0 && !widget.item.isPresent) {
+                  setState(() => widget.item.attendance = '✅');
+                }
                 widget.onDataChanged();
               },
               style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.success),

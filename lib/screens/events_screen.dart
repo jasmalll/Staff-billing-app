@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import '../models/catering_bill.dart';
 import '../models/staff_item.dart';
 import '../services/storage_service.dart';
-import 'calendar_screen.dart';
 
 class EventsScreen extends StatefulWidget {
   final ValueChanged<CateringBill>? onOpenBill;
@@ -273,56 +272,14 @@ class _EventsScreenState extends State<EventsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Events & Calendar'),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(48),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 0, 14, 8),
-              child: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface.withValues(alpha: .55),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: .7)),
-                ),
-                child: TabBar(
-                  dividerColor: Colors.transparent,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  indicator: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    borderRadius: BorderRadius.circular(11),
-                  ),
-                  labelColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF080B14) : Colors.white,
-                  unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
-                  labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
-                  tabs: const [
-                    Tab(text: 'Event List', icon: Icon(Icons.view_agenda_rounded, size: 16)),
-                    Tab(text: 'Calendar', icon: Icon(Icons.calendar_month_rounded, size: 16)),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => _showEventEditor(),
-          icon: const Icon(Icons.add_rounded),
-          label: const Text('Add Event'),
-        ),
-        body: TabBarView(
-          children: [
-            _buildEventList(),
-            CalendarScreen(
-              embedded: true,
-              onSelectBill: widget.onSelectBill ?? (bill) => widget.onOpenBill?.call(bill),
-            ),
-          ],
-        ),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Events')),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _showEventEditor(),
+        icon: const Icon(Icons.add_rounded),
+        label: const Text('Add Event'),
       ),
+      body: _buildEventList(),
     );
   }
 }

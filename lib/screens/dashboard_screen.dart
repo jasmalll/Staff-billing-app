@@ -8,7 +8,8 @@ import '../widgets/premium_components.dart';
 class DashboardScreen extends StatefulWidget {
   final VoidCallback? onOpenEvents;
   final VoidCallback? onOpenManage;
-  const DashboardScreen({super.key, this.onOpenEvents, this.onOpenManage});
+  final VoidCallback? onOpenCalendar;
+  const DashboardScreen({super.key, this.onOpenEvents, this.onOpenManage, this.onOpenCalendar});
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
@@ -67,6 +68,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ]),
         actions: [
           IconButton(tooltip: 'Manage staff', onPressed: widget.onOpenManage, icon: const Icon(Icons.groups_rounded)),
+          IconButton(tooltip: 'Calendar', onPressed: widget.onOpenCalendar, icon: const Icon(Icons.calendar_month_rounded)),
           IconButton(tooltip: 'Refresh dashboard', onPressed: _load, icon: const Icon(Icons.refresh_rounded)),
         ],
       ),

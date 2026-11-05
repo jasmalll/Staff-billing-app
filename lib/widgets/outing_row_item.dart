@@ -31,7 +31,7 @@ class OutingRowItem extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!item.isPresent) {
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         color: AppColors.dangerLight.withOpacity(0.4),
         child: Row(
           children: [
@@ -51,7 +51,7 @@ class OutingRowItem extends StatelessWidget {
     double total = item.getTotal(multiplier);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
       ),

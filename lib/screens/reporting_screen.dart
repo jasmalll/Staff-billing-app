@@ -625,17 +625,17 @@ class _ReportingScreenState extends State<ReportingScreen> {
             : Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 5, 14, 4),
+                    padding: const EdgeInsets.fromLTRB(14, 7, 14, 7),
                     child: Row(children: [
-                      Expanded(child: _reportMetric(context, 'TOTAL STAFF', '$totalStaff', Icons.groups_rounded, const Color(0xFF64748B))),
+                      _attendancePill(context, Icons.check_circle_rounded, '$presentCount Present', const Color(0xFF16A36A)),
                       const SizedBox(width: 8),
-                      Expanded(child: _reportMetric(context, 'PRESENT', '$presentCount', Icons.check_circle_rounded, const Color(0xFF16A36A))),
-                      const SizedBox(width: 8),
-                      Expanded(child: _reportMetric(context, 'ABSENT', '${totalStaff - presentCount}', Icons.event_busy_rounded, const Color(0xFFDC4545))),
+                      _attendancePill(context, Icons.event_busy_rounded, '${totalStaff - presentCount} Absent', const Color(0xFFDC4545)),
+                      const Spacer(),
+                      Text('$totalStaff staff', style: Theme.of(context).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w700)),
                     ]),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
@@ -647,47 +647,16 @@ class _ReportingScreenState extends State<ReportingScreen> {
                           '$totalStaff Staff Members',
                           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Theme.of(context).colorScheme.onSurface),
                         ),
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: AppColors.successLight,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                '$presentCount Present',
-                                style: const TextStyle(
-                                  color: AppColors.success,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 11.5,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: AppColors.dangerLight,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                '${totalStaff - presentCount} Absent',
-                                style: const TextStyle(
-                                  color: AppColors.danger,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 11.5,
-                                ),
-                              ),
-                            ),
-                          ],
+                        Text(
+                          'Live attendance',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                         ),
                       ],
                     ),
                   ),
 
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
                     color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     child: const Row(
                       children: [
@@ -861,7 +830,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(13),
         border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: ClipRRect(
@@ -884,22 +853,20 @@ class _ReportingScreenState extends State<ReportingScreen> {
     );
   }
 
-  Widget _reportMetric(BuildContext context, String label, String value, IconData icon, Color accent) {
-    final surface = Theme.of(context).colorScheme.surface;
+  Widget _attendancePill(BuildContext context, IconData icon, String label, Color accent) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
       decoration: BoxDecoration(
-        color: surface, borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).dividerColor),
+        color: accent.withValues(alpha: .10),
+        borderRadius: BorderRadius.circular(20),
       ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Icon(icon, color: accent, size: 18),
-        const SizedBox(height: 4),
-        Text(value, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
-        const SizedBox(height: 2),
-        Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: .4, fontWeight: FontWeight.w700)),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        Icon(icon, size: 13, color: accent),
+        const SizedBox(width: 5),
+        Text(label, style: TextStyle(color: accent, fontSize: 11, fontWeight: FontWeight.w800)),
       ]),
     );
   }
+
 
 }

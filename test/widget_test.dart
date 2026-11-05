@@ -121,29 +121,54 @@ void main() {
     expect(ThemeService.mode.value, ThemeMode.light);
   });
 
-  testWidgets('dashboard is the initial selected destination', (WidgetTester tester) async {
+
+  testWidgets('positive TA automatically marks staff present while zero TA does not', (WidgetTester tester) async {
+    final zeroTaStaff = StaffItem(index: 1, name: 'Zero', phone: '', role: 'boy');
+    final positiveTaStaff = StaffItem(index: 2, name: 'Positive', phone: '', role: 'boy');
+    await tester.pumpWidget(MaterialApp(home: Scaffold(body: Column(children: [
+      StaffRowItem(item: zeroTaStaff, onDataChanged: () {}, onEditDetails: () {}, onEditWage: () {}),
+      StaffRowItem(item: positiveTaStaff, onDataChanged: () {}, onEditDetails: () {}, onEditWage: () {}),
+    ]))));
+    final fields = find.byType(TextField);
+    await tester.enterText(fields.at(0), '0');
+    expect(zeroTaStaff.isPresent, isFalse);
+    await tester.enterText(fields.at(2), '125');
+    expect(positiveTaStaff.isPresent, isTrue);
+  });
+
+  testWidgets('reporting is the initial selected destination', (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const StaffBillingApp());
     await tester.pumpAndSettle();
-    expect(find.text('Dashboard'), findsAtLeastNWidgets(1));
-    expect(find.byTooltip('Manage staff'), findsOneWidget);
+    expect(find.text('Reporting'), findsAtLeastNWidgets(1));
+    expect(find.text('Business overview'), findsNothing);
     expect(find.byType(NavigationBar), findsNothing);
   });
 
-  testWidgets('four primary destinations and integrated event calendar are accessible', (WidgetTester tester) async {
+  testWidgets('primary destinations and dashboard calendar are accessible', (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const StaffBillingApp());
     await tester.pumpAndSettle();
 
-    expect(find.text('Dashboard'), findsAtLeastNWidgets(1));
-    expect(find.text('Reporting'), findsOneWidget);
+    expect(find.text('Business overview'), findsNothing);
+    await tester.tap(find.text('Dashboard'));
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('Calendar'), findsOneWidget);
+    expect(find.byTooltip('Manage staff'), findsOneWidget);
+    await tester.tap(find.byTooltip('Calendar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Event Calendar'), findsOneWidget);
+    await tester.tap(find.text('Dashboard').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Reporting').last);
+    await tester.pumpAndSettle();
     expect(find.text('Outing'), findsOneWidget);
     expect(find.text('Events'), findsAtLeastNWidgets(1));
 
     await tester.tap(find.text('Events').last);
     await tester.pumpAndSettle();
     expect(find.text('Event List'), findsOneWidget);
-    expect(find.text('Calendar'), findsOneWidget);
+    expect(find.text('Calendar'), findsNothing);
 
     await tester.tap(find.text('Dashboard').last);
     await tester.pumpAndSettle();

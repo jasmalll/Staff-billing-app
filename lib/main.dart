@@ -11,6 +11,7 @@ import 'services/supabase_service.dart';
 import 'services/theme_service.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/events_screen.dart';
+import 'screens/calendar_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -92,7 +93,7 @@ class MainNavigationShell extends StatefulWidget {
 }
 
 class _MainNavigationShellState extends State<MainNavigationShell> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
   Timer? _debounceSaveTimer;
 
   String currentBillId = DateTime.now().millisecondsSinceEpoch.toString();
@@ -294,6 +295,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       DashboardScreen(
         onOpenEvents: () => setState(() => _currentIndex = 3),
         onOpenManage: () => setState(() => _currentIndex = 4),
+        onOpenCalendar: () => setState(() => _currentIndex = 5),
       ),
       ReportingScreen(
         boysList: sharedBoysList,
@@ -358,9 +360,10 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         onSelectBill: _loadExistingBillFromCalendar,
       ),
       OtherScreen(onOpenBill: _loadExistingBillFromCalendar),
+      CalendarScreen(onSelectBill: _loadExistingBillFromCalendar),
     ];
 
-    final selectedNavIndex = _currentIndex == 4 ? -1 : _currentIndex;
+    final selectedNavIndex = (_currentIndex == 4 || _currentIndex == 5) ? -1 : _currentIndex;
 
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: pages),
