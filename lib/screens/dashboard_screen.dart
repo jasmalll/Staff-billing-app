@@ -3,10 +3,12 @@ import 'package:intl/intl.dart';
 import '../constants/app_colors.dart';
 import '../models/catering_bill.dart';
 import '../services/storage_service.dart';
+import '../widgets/premium_components.dart';
 
 class DashboardScreen extends StatefulWidget {
   final VoidCallback? onOpenEvents;
-  const DashboardScreen({super.key, this.onOpenEvents});
+  final VoidCallback? onOpenManage;
+  const DashboardScreen({super.key, this.onOpenEvents, this.onOpenManage});
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
@@ -63,7 +65,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Text('Cater Pro', style: TextStyle(fontWeight: FontWeight.w800)),
           Text('Business overview', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: Colors.white70)),
         ]),
-        actions: [IconButton(tooltip: 'Refresh dashboard', onPressed: _load, icon: const Icon(Icons.refresh_rounded))],
+        actions: [
+          IconButton(tooltip: 'Manage staff', onPressed: widget.onOpenManage, icon: const Icon(Icons.groups_rounded)),
+          IconButton(tooltip: 'Refresh dashboard', onPressed: _load, icon: const Icon(Icons.refresh_rounded)),
+        ],
       ),
       body: _loading ? const Center(child: CircularProgressIndicator()) : RefreshIndicator(
         onRefresh: _load,
@@ -99,7 +104,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(children: [
-                    Container(width: 42, height: 42, decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(.10), borderRadius: BorderRadius.circular(13)), child: Icon(Icons.event_available_rounded, color: theme.colorScheme.primary)),
+                    Container(width: 42, height: 42, decoration: BoxDecoration(color: theme.colorScheme.primary.withValues(alpha: .10), borderRadius: BorderRadius.circular(13)), child: Icon(Icons.event_available_rounded, color: theme.colorScheme.primary)),
                     const SizedBox(width: 11),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       const Text('Event Management', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
@@ -153,14 +158,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ...recent.take(5).map((bill) => Card(
                 margin: const EdgeInsets.only(bottom: 9),
                 child: ListTile(
-                  leading: Container(width: 42, height: 42, decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(.09), borderRadius: BorderRadius.circular(13)), child: Icon(Icons.event_note_rounded, color: theme.colorScheme.primary)),
+                  leading: Container(width: 42, height: 42, decoration: BoxDecoration(color: theme.colorScheme.primary.withValues(alpha: .09), borderRadius: BorderRadius.circular(13)), child: Icon(Icons.event_note_rounded, color: theme.colorScheme.primary)),
                   title: Text(bill.eventName.isNotEmpty ? bill.eventName : (bill.auditoriumName.isEmpty ? 'Untitled event' : bill.auditoriumName), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700)),
                   subtitle: Text(DateFormat('dd MMM yyyy').format(bill.date)),
                   trailing: Text(_money(bill.getAllTotalBill(bill.taMultiplier)), style: const TextStyle(fontWeight: FontWeight.w800)),
                 ),
               )),
             const SizedBox(height: 14),
-            Container(padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: theme.colorScheme.surfaceContainerHighest.withOpacity(.55), borderRadius: BorderRadius.circular(16)), child: Row(children: [Icon(Icons.cloud_done_outlined, color: theme.colorScheme.primary), const SizedBox(width: 10), const Expanded(child: Text('Your billing data is stored locally first. Cloud sync continues through the existing sync queue.', style: TextStyle(fontSize: 12, height: 1.4)))])),
+            Container(padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: .55), borderRadius: BorderRadius.circular(16)), child: Row(children: [Icon(Icons.cloud_done_outlined, color: theme.colorScheme.primary), const SizedBox(width: 10), const Expanded(child: Text('Your billing data is stored locally first. Cloud sync continues through the existing sync queue.', style: TextStyle(fontSize: 12, height: 1.4)))])),
           ],
         ),
       ),
@@ -170,7 +175,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _quickCount(String label, int value) => Padding(padding: const EdgeInsets.only(right: 4), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('$value', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)), Text(label, style: Theme.of(context).textTheme.labelSmall)]));
   Widget _heroMetric(String label, String value) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(value, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)), Text(label, style: const TextStyle(color: Colors.white70, fontSize: 10))]);
   Widget _sectionTitle(String title) => Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800));
-  Widget _metric(String title, String value, IconData icon, Color accent) => Card(child: Padding(padding: const EdgeInsets.all(14), child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Icon(icon, color: accent), Text(value, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)), Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11))])));
+  Widget _metric(String title, String value, IconData icon, Color accent) => AnalyticsItem(title: title, value: value, icon: icon, accent: accent);
   Widget _breakdown(String label, double value, double total) { final ratio = total <= 0 ? 0.0 : (value / total).clamp(0.0, 1.0); return Padding(padding: const EdgeInsets.only(bottom: 13), child: Column(children: [Row(children: [Expanded(child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600))), Text(_money(value), style: const TextStyle(fontWeight: FontWeight.w700))]), const SizedBox(height: 7), ClipRRect(borderRadius: BorderRadius.circular(20), child: LinearProgressIndicator(value: ratio, minHeight: 7, backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest))])); }
   Widget _emptyState() => Container(padding: const EdgeInsets.all(22), decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(18), border: Border.all(color: AppColors.border)), child: const Column(children: [Icon(Icons.event_available_rounded, size: 32, color: AppColors.textMuted), SizedBox(height: 8), Text('No saved events yet', style: TextStyle(fontWeight: FontWeight.w700)), Text('Create an event in Outing and it will appear here.', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))]));
 }

@@ -6,7 +6,6 @@ import 'models/catering_bill.dart';
 import 'services/storage_service.dart';
 import 'screens/reporting_screen.dart';
 import 'screens/outing_screen.dart';
-import 'screens/calendar_screen.dart';
 import 'screens/other_screen.dart';
 import 'services/supabase_service.dart';
 import 'services/theme_service.dart';
@@ -93,7 +92,7 @@ class MainNavigationShell extends StatefulWidget {
 }
 
 class _MainNavigationShellState extends State<MainNavigationShell> {
-  int _currentIndex = 3;
+  int _currentIndex = 0;
   Timer? _debounceSaveTimer;
 
   String currentBillId = DateTime.now().millisecondsSinceEpoch.toString();
@@ -220,7 +219,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       sharedBoysList.clear();
       sharedSpList.clear();
       sharedCpList.clear();
-      _currentIndex = 0;
+      _currentIndex = 1;
     });
   }
 
@@ -246,7 +245,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       sharedCpList.clear();
       sharedCpList.addAll(bill.cpList);
 
-      _currentIndex = 1;
+      _currentIndex = 2;
     });
     _triggerAutoSave();
   }
@@ -288,39 +287,14 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
     );
   }
 
-  Future<void> _showMoreMenu() async {
-    await showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      showDragHandle: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-      builder: (sheetContext) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(18, 4, 18, 20),
-          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text('More', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
-            const SizedBox(height: 12),
-            ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-              leading: const CircleAvatar(child: Icon(Icons.calendar_month_rounded)),
-              title: const Text('Calendar', style: TextStyle(fontWeight: FontWeight.w700)),
-              subtitle: const Text('View events by date and manage backups'),
-              trailing: const Icon(Icons.chevron_right_rounded),
-              onTap: () {
-                Navigator.pop(sheetContext);
-                _triggerAutoSave();
-                setState(() => _currentIndex = 2);
-              },
-            ),
-          ]),
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = [
+      DashboardScreen(
+        onOpenEvents: () => setState(() => _currentIndex = 3),
+        onOpenManage: () => setState(() => _currentIndex = 4),
+      ),
       ReportingScreen(
         boysList: sharedBoysList,
         spList: sharedSpList,
@@ -330,7 +304,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         onStartNewWork: _startNewWork,
         onSubmitToOuting: () {
           _triggerAutoSave();
-          setState(() => _currentIndex = 1);
+          setState(() => _currentIndex = 2);
         },
       ),
       OutingScreen(
@@ -379,22 +353,14 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         },
         onDataChanged: _triggerAutoSave,
       ),
-      CalendarScreen(
+      EventsScreen(
+        onOpenBill: _loadExistingBillFromCalendar,
         onSelectBill: _loadExistingBillFromCalendar,
       ),
-      DashboardScreen(onOpenEvents: () => setState(() => _currentIndex = 5)),
       OtherScreen(onOpenBill: _loadExistingBillFromCalendar),
-      EventsScreen(onOpenBill: _loadExistingBillFromCalendar),
     ];
 
-    final selectedNavIndex = switch (_currentIndex) {
-      0 => 0,
-      1 => 1,
-      3 => 2,
-      4 => 3,
-      5 => 4,
-      _ => -1,
-    };
+    final selectedNavIndex = _currentIndex == 4 ? -1 : _currentIndex;
 
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: pages),
@@ -409,19 +375,10 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
             boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: .18), blurRadius: 18, offset: const Offset(0, -5))],
           ),
           child: Row(children: [
-            _navItem(0, 0, Icons.edit_note_rounded, 'Reporting', selectedNavIndex),
-            _navItem(1, 1, Icons.receipt_long_rounded, 'Outing', selectedNavIndex),
-            _navItem(2, 3, Icons.dashboard_rounded, 'Dashboard', selectedNavIndex, prominent: true),
-            _navItem(3, 4, Icons.grid_view_rounded, 'Manage', selectedNavIndex),
-            _navItem(4, 5, Icons.event_note_rounded, 'Events', selectedNavIndex),
-            SizedBox(
-              width: 42,
-              child: IconButton(
-                tooltip: 'More',
-                onPressed: _showMoreMenu,
-                icon: Icon(Icons.more_horiz_rounded, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 25),
-              ),
-            ),
+            _navItem(0, 0, Icons.dashboard_rounded, 'Dashboard', selectedNavIndex, prominent: true),
+            _navItem(1, 1, Icons.edit_note_rounded, 'Reporting', selectedNavIndex),
+            _navItem(2, 2, Icons.receipt_long_rounded, 'Outing', selectedNavIndex),
+            _navItem(3, 3, Icons.event_note_rounded, 'Events', selectedNavIndex),
           ]),
         ),
       ),

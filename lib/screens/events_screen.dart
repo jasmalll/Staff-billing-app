@@ -5,10 +5,12 @@ import 'package:intl/intl.dart';
 import '../models/catering_bill.dart';
 import '../models/staff_item.dart';
 import '../services/storage_service.dart';
+import 'calendar_screen.dart';
 
 class EventsScreen extends StatefulWidget {
   final ValueChanged<CateringBill>? onOpenBill;
-  const EventsScreen({super.key, this.onOpenBill});
+  final ValueChanged<CateringBill>? onSelectBill;
+  const EventsScreen({super.key, this.onOpenBill, this.onSelectBill});
 
   @override
   State<EventsScreen> createState() => _EventsScreenState();
@@ -232,42 +234,95 @@ class _EventsScreenState extends State<EventsScreen> {
     );
   }
 
+  Widget _buildEventList() {
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (_events.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.event_note_rounded, size: 58, color: Theme.of(context).colorScheme.primary),
+              const SizedBox(height: 12),
+              const Text('No events yet', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+              const SizedBox(height: 5),
+              Text('Create an event to track staff counts and total TA.', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium),
+            ],
+          ),
+        ),
+      );
+    }
+    return RefreshIndicator(
+      onRefresh: _load,
+      child: GridView.builder(
+        padding: const EdgeInsets.fromLTRB(14, 14, 14, 100),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: 1.35,
+        ),
+        itemCount: _events.length,
+        itemBuilder: (context, index) => _eventCard(_events[index]),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Events')),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showEventEditor(),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('Add Event'),
-      ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _events.isEmpty
-              ? Center(child: Padding(
-                  padding: const EdgeInsets.all(28),
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(Icons.event_note_rounded, size: 58, color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(height: 12),
-                    const Text('No events yet', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
-                    const SizedBox(height: 5),
-                    Text('Create an event to track staff counts and total TA.', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium),
-                  ]),
-                ))
-              : RefreshIndicator(
-                  onRefresh: _load,
-                  child: GridView.builder(
-                    padding: const EdgeInsets.fromLTRB(14, 14, 14, 100),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: 1.35,
-                    ),
-                    itemCount: _events.length,
-                    itemBuilder: (context, index) => _eventCard(_events[index]),
-                  ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Events & Calendar'),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(48),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 0, 14, 8),
+              child: Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface.withValues(alpha: .55),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: .7)),
                 ),
+                child: TabBar(
+                  dividerColor: Colors.transparent,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.circular(11),
+                  ),
+                  labelColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF080B14) : Colors.white,
+                  unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                  labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+                  tabs: const [
+                    Tab(text: 'Event List', icon: Icon(Icons.view_agenda_rounded, size: 16)),
+                    Tab(text: 'Calendar', icon: Icon(Icons.calendar_month_rounded, size: 16)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => _showEventEditor(),
+          icon: const Icon(Icons.add_rounded),
+          label: const Text('Add Event'),
+        ),
+        body: TabBarView(
+          children: [
+            _buildEventList(),
+            CalendarScreen(
+              embedded: true,
+              onSelectBill: widget.onSelectBill ?? (bill) => widget.onOpenBill?.call(bill),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

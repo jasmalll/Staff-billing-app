@@ -126,21 +126,29 @@ void main() {
     await tester.pumpWidget(const StaffBillingApp());
     await tester.pumpAndSettle();
     expect(find.text('Dashboard'), findsAtLeastNWidgets(1));
-    expect(find.byTooltip('More'), findsOneWidget);
+    expect(find.byTooltip('Manage staff'), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);
   });
 
-  testWidgets('app shows all six main sections', (WidgetTester tester) async {
+  testWidgets('four primary destinations and integrated event calendar are accessible', (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const StaffBillingApp());
     await tester.pumpAndSettle();
-    expect(find.text('Reporting'), findsAtLeastNWidgets(1));
-    expect(find.text('Outing'), findsAtLeastNWidgets(1));
+
     expect(find.text('Dashboard'), findsAtLeastNWidgets(1));
-    expect(find.text('Manage'), findsAtLeastNWidgets(1));
-    expect(find.text('Events'), findsAtLeastNWidgets(1));
-    await tester.tap(find.byTooltip('More'));
+    expect(find.text('Reporting'), findsOneWidget);
+    expect(find.text('Outing'), findsOneWidget);
+    expect(find.text('Events'), findsOneWidget);
+
+    await tester.tap(find.text('Events').last);
     await tester.pumpAndSettle();
+    expect(find.text('Event List'), findsOneWidget);
     expect(find.text('Calendar'), findsOneWidget);
+
+    await tester.tap(find.text('Dashboard').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Manage staff'));
+    await tester.pumpAndSettle();
+    expect(find.text('Staff Directory'), findsOneWidget);
   });
 }

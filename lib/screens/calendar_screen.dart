@@ -10,7 +10,8 @@ import '../services/storage_service.dart';
 
 class CalendarScreen extends StatefulWidget {
   final Function(CateringBill) onSelectBill;
-  const CalendarScreen({Key? key, required this.onSelectBill}) : super(key: key);
+  final bool embedded;
+  const CalendarScreen({super.key, required this.onSelectBill, this.embedded = false});
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -192,7 +193,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
+      appBar: widget.embedded ? null : AppBar(
         title: const Text('Event Calendar', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: Colors.white)),
         actions: [
           if (isBackupProcessing)
@@ -225,6 +226,28 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        if (widget.embedded)
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
+                            child: Row(
+                              children: [
+                                const Spacer(),
+                                if (isBackupProcessing)
+                                  const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                                else
+                                  IconButton(
+                                    tooltip: 'Backup and restore',
+                                    onPressed: _showLocalBackupRestoreDialog,
+                                    icon: const Icon(Icons.cloud_sync_rounded),
+                                  ),
+                                IconButton(
+                                  tooltip: 'Refresh calendar',
+                                  onPressed: _fetchBills,
+                                  icon: const Icon(Icons.refresh_rounded),
+                                ),
+                              ],
+                            ),
+                          ),
                         // Monthly Calendar Card
                         Container(
                           margin: const EdgeInsets.all(12),
@@ -233,7 +256,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(color: Theme.of(context).dividerColor),
                             boxShadow: [
-                              BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 6, offset: const Offset(0, 2)),
+                              BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 6, offset: const Offset(0, 2)),
                             ],
                           ),
                           child: Column(
@@ -414,7 +437,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 borderRadius: BorderRadius.circular(14),
                                 border: Border.all(color: Theme.of(context).dividerColor),
                                 boxShadow: [
-                                  BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2)),
+                                  BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 4, offset: const Offset(0, 2)),
                                 ],
                               ),
                               child: Material(
