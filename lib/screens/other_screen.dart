@@ -584,14 +584,25 @@ class _OtherScreenState extends State<OtherScreen> {
             const SizedBox(height: 6),
             Expanded(
               child: filteredStaff.isEmpty
-                ? Center(child: Padding(padding: const EdgeInsets.all(28), child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(_masterStaff.isEmpty ? Icons.person_add_alt_1_rounded : Icons.search_off_rounded, size: 44, color: AppColors.textMuted),
-                    const SizedBox(height: 12),
-                    Text(_masterStaff.isEmpty ? 'No staff added yet' : 'No matching staff found', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-                    const SizedBox(height: 5),
-                    Text(_masterStaff.isEmpty ? 'Add your first team member to get started.' : 'Try another name, phone number, wage or category.', textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary)),
-                    if (_masterStaff.isEmpty) ...[const SizedBox(height: 14), FilledButton.icon(onPressed: _addMasterStaff, icon: const Icon(Icons.add), label: const Text('Add staff'))],
-                  ])))
+                ? Center(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 420),
+                        child: Column(mainAxisSize: MainAxisSize.min, children: [
+                          Icon(_masterStaff.isEmpty ? Icons.person_add_alt_1_rounded : Icons.search_off_rounded, size: 40, color: AppColors.textMuted),
+                          const SizedBox(height: 8),
+                          Text(_masterStaff.isEmpty ? 'No staff added yet' : 'No matching staff found', textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+                          const SizedBox(height: 4),
+                          Text(_masterStaff.isEmpty ? 'Add your first team member to get started.' : 'Try another name, phone number, wage or category.', textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary)),
+                          if (_masterStaff.isEmpty) ...[
+                            const SizedBox(height: 10),
+                            FilledButton.icon(onPressed: _addMasterStaff, icon: const Icon(Icons.add), label: const Text('Add staff')),
+                          ],
+                        ]),
+                      ),
+                    ),
+                  )
                 : ListView.separated(
                     padding: const EdgeInsets.fromLTRB(16, 2, 16, 20),
                     itemCount: filteredStaff.length,
