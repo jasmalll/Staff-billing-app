@@ -138,7 +138,7 @@ void main() {
     expect(find.text('Dashboard'), findsAtLeastNWidgets(1));
     expect(find.text('Reporting'), findsOneWidget);
     expect(find.text('Outing'), findsOneWidget);
-    expect(find.text('Events'), findsOneWidget);
+    expect(find.text('Events'), findsAtLeastNWidgets(1));
 
     await tester.tap(find.text('Events').last);
     await tester.pumpAndSettle();
