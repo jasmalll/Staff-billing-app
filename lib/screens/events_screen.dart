@@ -273,7 +273,7 @@ class _EventsScreenState extends State<EventsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Events')),
+      appBar: AppBar(title: const Text('Event List')),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showEventEditor(),
         icon: const Icon(Icons.add_rounded),
