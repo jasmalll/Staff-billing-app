@@ -15,7 +15,7 @@ import 'package:billing/widgets/staff_row_item.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('bill totals include other expenses and setting bill with correct TA separation', () {
+  test('bill totals include other expenses and setting bill while TA remains staff-only', () {
     final bill = CateringBill(
       id: 'qa-total',
       auditoriumName: 'QA Hall',
@@ -26,8 +26,8 @@ void main() {
       groupGpay: const {},
     );
     expect(bill.getAllTotalBill(3), 200);
-    // Other expenses are included in TA total; setting bill is not.
-    expect(bill.getAllTotalTa(3), 120);
+    // Other expenses and setting bill affect the bill total, never staff TA.
+    expect(bill.getAllTotalTa(3), 0);
   });
 
   test('event metadata is preserved in bill serialization and legacy defaults', () {

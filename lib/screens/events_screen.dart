@@ -61,7 +61,10 @@ class _EventsScreenState extends State<EventsScreen> {
         'CP: $cp\n'
         'Hosting: ${event.hostingCount}\n'
         'Total Staff: $total\n\n'
-        'TOTAL TA: ${_money(event.getAllTotalTa(event.taMultiplier))}';
+        'TOTAL TA: ${_money(event.getAllTotalTa(event.taMultiplier))}\n\n'
+        'OTHER EXPENSES: ${_money(event.otherExpenses)}\n'
+        '${event.otherExpenseItems.isEmpty ? 'No expense breakdown' : event.otherExpenseItems.map((item) => '${item['name']?.toString() ?? 'Expense'}: ${_money((item['amount'] as num?)?.toDouble() ?? 0)}').join('\n')}\n\n'
+        'SETTINGS BILL: ${_money(event.settingExpenses)}';
     if (!mounted) return;
     await showDialog<void>(
       context: context,
