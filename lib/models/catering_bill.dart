@@ -37,10 +37,10 @@ class CateringBill {
   List<StaffItem> get spList => staffList.where((s) => s.role == 'sp').toList();
   List<StaffItem> get cpList => staffList.where((s) => s.role == 'cp').toList();
 
-  // TA-il otherExpenses mathram koodum, settings koodilla
+  // Total TA includes staff TA only. Other expenses and setting bills are
+  // tracked separately and must never be included in staff TA.
   double getAllTotalTa(double mult) {
-    double staffTa = staffList.fold(0.0, (sum, s) => sum + s.getCalculatedTa(mult));
-    return staffTa + otherExpenses;
+    return staffList.fold(0.0, (sum, s) => sum + s.getCalculatedTa(mult));
   }
 
   // Bill-il staff bill + otherExpenses + settingExpenses koodum

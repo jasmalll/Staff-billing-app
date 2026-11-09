@@ -312,6 +312,8 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       OutingScreen(
         billId: currentBillId,
         auditoriumName: auditoriumName,
+        eventName: eventName,
+        hostingCount: hostingCount,
         eventDate: eventDate,
         otherExpenses: otherExpenses,
         settingExpenses: settingExpenses,

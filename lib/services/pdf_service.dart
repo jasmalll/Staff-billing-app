@@ -7,6 +7,8 @@ import '../models/staff_item.dart';
 class PdfService {
   static Future<void> exportOutingPdf({
     required String auditoriumName,
+    required String eventName,
+    required int hostingCount,
     required DateTime eventDate,
     required List<StaffItem> boysList,
     required List<StaffItem> spList,
@@ -25,19 +27,18 @@ class PdfService {
     // =========================================================================
     pw.Font? regularFont;
     pw.Font? boldFont;
-    var hasNotoSans = false;
 
     try {
       regularFont = await PdfGoogleFonts.notoSansRegular();
       boldFont = await PdfGoogleFonts.notoSansBold();
-      hasNotoSans = true;
     } catch (_) {
       regularFont = pw.Font.helvetica();
       boldFont = pw.Font.helveticaBold();
     }
 
-    // Standard 'Rs. ' prevents missing glyph box (☒) across all devices and offline viewing
-    final currencySymbol = hasNotoSans ? '₹ ' : 'Rs. ';
+    // A text-safe currency label prevents missing-glyph boxes in PDF viewers
+    // (including viewers that substitute fonts while sharing or printing).
+    final currencySymbol = 'Rs. ';
 
     String formatCurrency(num value) {
       final formatted = NumberFormat('#,##,###').format(value.toInt());
@@ -149,6 +150,45 @@ class PdfService {
               ),
             ],
           ),
+
+          // -------------------------------------------------------------------
+          // EVENT DETAILS + STAFF COUNT
+          // -------------------------------------------------------------------
+          pw.Text('EVENT DETAILS', style: pw.TextStyle(font: boldFont, fontSize: 10, color: deepNavy)),
+          pw.SizedBox(height: 4),
+          pw.Table(
+            border: pw.TableBorder.all(color: borderColor, width: 0.6),
+            columnWidths: const {0: pw.FlexColumnWidth(1), 1: pw.FlexColumnWidth(2)},
+            children: [
+              _detailRow('Site name', venue, regularFont, boldFont, lightNavyTint),
+              _detailRow('Date', dateStr, regularFont, boldFont, PdfColors.white),
+              _detailRow('Event', eventName.trim().isEmpty ? '—' : eventName.trim(), regularFont, boldFont, lightNavyTint),
+            ],
+          ),
+          pw.SizedBox(height: 8),
+          pw.Text('STAFF COUNT', style: pw.TextStyle(font: boldFont, fontSize: 10, color: deepNavy)),
+          pw.SizedBox(height: 4),
+          pw.Table(
+            border: pw.TableBorder.all(color: borderColor, width: 0.6),
+            columnWidths: const {0: pw.FlexColumnWidth(1), 1: pw.FlexColumnWidth(1), 2: pw.FlexColumnWidth(1), 3: pw.FlexColumnWidth(1), 4: pw.FlexColumnWidth(1.2)},
+            children: [
+              pw.TableRow(decoration: pw.BoxDecoration(color: lightNavyTint), children: [
+                _buildSummaryHeaderCell('BOYS', slateBlue),
+                _buildSummaryHeaderCell('SP', slateBlue),
+                _buildSummaryHeaderCell('CP', slateBlue),
+                _buildSummaryHeaderCell('HOSTING', slateBlue),
+                _buildSummaryHeaderCell('TOTAL STAFF', deepNavy, isEmphasized: true),
+              ]),
+              pw.TableRow(children: [
+                _buildSummaryValueCell(boysList.length.toString(), charcoal),
+                _buildSummaryValueCell(spList.length.toString(), charcoal),
+                _buildSummaryValueCell(cpList.length.toString(), charcoal),
+                _buildSummaryValueCell(hostingCount.toString(), charcoal),
+                _buildSummaryValueCell((boysList.length + spList.length + cpList.length + hostingCount).toString(), deepNavy, isEmphasized: true),
+              ]),
+            ],
+          ),
+          pw.SizedBox(height: 8),
 
           // -------------------------------------------------------------------
           // STEP 2: FIRST SUMMARY TABLE (ALL TOTAL TA | OTHER EXP | ALL TOTAL BILL)
@@ -482,6 +522,16 @@ class PdfService {
   // ===========================================================================
   // REUSABLE CELL & SECTION BUILDERS
   // ===========================================================================
+
+  static pw.TableRow _detailRow(String label, String value, pw.Font regularFont, pw.Font boldFont, PdfColor background) {
+    return pw.TableRow(
+      decoration: pw.BoxDecoration(color: background),
+      children: [
+        pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text(label, style: pw.TextStyle(font: boldFont, fontSize: 9))),
+        pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text(value, style: pw.TextStyle(font: regularFont, fontSize: 9))),
+      ],
+    );
+  }
 
   static pw.Widget _buildSummaryHeaderCell(String text, PdfColor color, {bool isEmphasized = false}) {
     return pw.Padding(

@@ -9,6 +9,8 @@ import '../widgets/outing_row_item.dart';
 class OutingScreen extends StatefulWidget {
   final String billId;
   final String auditoriumName;
+  final String eventName;
+  final int hostingCount;
   final DateTime eventDate;
   final double otherExpenses;
   final double settingExpenses; // Settings column
@@ -32,6 +34,8 @@ class OutingScreen extends StatefulWidget {
     Key? key,
     required this.billId,
     required this.auditoriumName,
+    required this.eventName,
+    required this.hostingCount,
     required this.eventDate,
     required this.otherExpenses,
     required this.settingExpenses,
@@ -632,6 +636,8 @@ class _OutingScreenState extends State<OutingScreen> {
               _gpayControllers.forEach((k, v) => gpayMap[k] = v.text.trim());
               PdfService.exportOutingPdf(
                 auditoriumName: _auditoriumCtrl.text.trim(),
+                eventName: widget.eventName,
+                hostingCount: widget.hostingCount,
                 eventDate: widget.eventDate,
                 boysList: widget.boysList,
                 spList: widget.spList,
