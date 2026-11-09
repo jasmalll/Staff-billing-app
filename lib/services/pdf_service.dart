@@ -25,8 +25,8 @@ class PdfService {
     // =========================================================================
     // 1. TYPOGRAPHY & FONT LOADING (Google Fonts with safe fallback)
     // =========================================================================
-    pw.Font? regularFont;
-    pw.Font? boldFont;
+    late pw.Font regularFont;
+    late pw.Font boldFont;
 
     try {
       regularFont = await PdfGoogleFonts.notoSansRegular();
