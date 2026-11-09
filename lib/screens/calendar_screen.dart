@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
-import 'package:file_saver/file_saver.dart';
 import '../constants/app_colors.dart';
 import '../models/catering_bill.dart';
 import '../services/storage_service.dart';
@@ -63,15 +62,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
       final jsonStr = await StorageService.exportBackupJson();
       final bytes = Uint8List.fromList(utf8.encode(jsonStr));
       final stamp = DateFormat('yyyyMMdd_HHmm').format(DateTime.now());
-      await FileSaver.instance.saveFile(
-        name: 'staff_billing_backup_$stamp',
+      // Use Android's system document picker (Storage Access Framework) so
+      // the user explicitly chooses Downloads, Drive, or another destination.
+      // Passing bytes avoids relying on a temporary/cache file path.
+      final savedPath = await FilePicker.platform.saveFile(
+        dialogTitle: 'Save staff billing backup',
+        fileName: 'staff_billing_backup_$stamp.json',
+        type: FileType.custom,
+        allowedExtensions: const ['json'],
         bytes: bytes,
-        ext: 'json',
-        mimeType: MimeType.json,
       );
       if (!mounted) return;
+      if (savedPath == null || savedPath.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Backup save cancelled. No data was changed.')),
+        );
+        return;
+      }
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('JSON backup exported. Choose Downloads or Google Drive if your device offers that location.')),
+        SnackBar(content: Text('Backup saved successfully: $savedPath')),
       );
     } catch (e) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(
