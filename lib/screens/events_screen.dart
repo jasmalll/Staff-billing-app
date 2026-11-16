@@ -46,7 +46,87 @@ class _EventsScreenState extends State<EventsScreen> {
   }
 
 
-  Future<void> _showEventSummary(CateringBill event) async {
+  Future<void> _showEventOptions(CateringBill event) async {
+    if (!mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Event Summary'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _eventOptionTile(
+              context: dialogContext,
+              icon: Icons.description_outlined,
+              title: 'Event Details',
+              subtitle: 'Complete event information',
+              onTap: () {
+                Navigator.pop(dialogContext);
+                _showEventDetails(event);
+              },
+            ),
+            const SizedBox(height: 10),
+            _eventOptionTile(
+              context: dialogContext,
+              icon: Icons.summarize_outlined,
+              title: 'Short Event Details',
+              subtitle: 'Wage and bill summary',
+              onTap: () {
+                Navigator.pop(dialogContext);
+                _showShortEventDetails(event);
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _eventOptionTile({
+    required BuildContext context,
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    final scheme = Theme.of(context).colorScheme;
+    return Material(
+      color: scheme.surfaceContainerHighest.withOpacity(0.55),
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              Icon(icon, color: scheme.primary, size: 25),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
+                    const SizedBox(height: 3),
+                    Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showEventDetails(CateringBill event) async {
     final boys = event.boys.length;
     final sp = event.spList.length;
     final cp = event.cpList.length;
@@ -64,20 +144,51 @@ class _EventsScreenState extends State<EventsScreen> {
         'TOTAL TA: ${_money(event.getAllTotalTa(event.taMultiplier))}\n\n'
         'OTHER EXPENSES: ${_money(event.otherExpenses)}\n'
         '${event.otherExpenseItems.isEmpty ? 'No expense breakdown' : event.otherExpenseItems.map((item) => '${item['name']?.toString() ?? 'Expense'}: ${_money((item['amount'] as num?)?.toDouble() ?? 0)}').join('\n')}\n\n'
-        'SETTINGS BILL: ${_money(event.settingExpenses)}';
+        'SETTINGS BILL: ${_money(event.settingExpenses)}\n\n'
+        'TOTAL BILL: ${_money(event.getAllTotalBill(event.taMultiplier))}';
+    await _showCopyDialog(title: 'Event Details', content: summary, successMessage: 'Event details copied');
+  }
+
+  Future<void> _showShortEventDetails(CateringBill event) async {
+    final boysWage = event.boys.fold<double>(0, (sum, staff) => sum + staff.getEffectiveWage());
+    final spCpWage = [...event.spList, ...event.cpList]
+        .fold<double>(0, (sum, staff) => sum + staff.getEffectiveWage());
+    final totalTa = event.getAllTotalTa(event.taMultiplier);
+    final totalBill = event.getAllTotalBill(event.taMultiplier);
+    final summary = '${event.auditoriumName.isEmpty ? 'Site not set' : event.auditoriumName}\n\n'
+        'Date :- ${_date(event.date)}\n\n'
+        'Boys total wage :- ${_money(boysWage)}\n\n'
+        'SP and CP total wage :- ${_money(spCpWage)}\n\n'
+        'Total TA :- ${_money(totalTa)}\n\n'
+        'Other expenses :- ${_money(event.otherExpenses)}\n\n'
+        'Setting bill :- ${_money(event.settingExpenses)}\n\n'
+        'Total bill :- ${_money(totalBill)}';
+    await _showCopyDialog(title: 'Short Event Details', content: summary, successMessage: 'Short event details copied');
+  }
+
+  Future<void> _showCopyDialog({
+    required String title,
+    required String content,
+    required String successMessage,
+  }) async {
     if (!mounted) return;
     await showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Event Details'),
-        content: SelectableText(summary, style: const TextStyle(height: 1.55, fontSize: 14, fontWeight: FontWeight.w600)),
+        title: Text(title),
+        content: SingleChildScrollView(
+          child: SelectableText(
+            content,
+            style: const TextStyle(height: 1.55, fontSize: 14, fontWeight: FontWeight.w600),
+          ),
+        ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Close')),
           FilledButton.icon(
             onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: summary));
+              await Clipboard.setData(ClipboardData(text: content));
               if (dialogContext.mounted) Navigator.pop(dialogContext);
-              if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Event details copied')));
+              if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(successMessage)));
             },
             icon: const Icon(Icons.copy_rounded, size: 17),
             label: const Text('Copy'),
@@ -185,7 +296,7 @@ class _EventsScreenState extends State<EventsScreen> {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => _showEventSummary(event),
+        onTap: () => _showEventOptions(event),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(13, 13, 9, 13),
           child: Column(
