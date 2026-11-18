@@ -204,7 +204,8 @@ class _EventsScreenState extends State<EventsScreen> {
           }
           final grandTotal = staff.fold<double>(0, (sum, person) => sum + rowTotal(person));
           return AlertDialog(
-            title: const Text('SP / CP Wage Breakdown'),
+            insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            title: const Text('SP / CP Wage Breakdown', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
             content: SizedBox(
               width: double.maxFinite,
               child: SingleChildScrollView(
@@ -233,51 +234,56 @@ class _EventsScreenState extends State<EventsScreen> {
                             },
                             onDeleted: () => setDialogState(() => expenses.remove(expense)),
                           )).toList()),
-                          Row(children: [
-                            TextButton.icon(
-                              style: TextButton.styleFrom(visualDensity: VisualDensity.compact, padding: const EdgeInsets.symmetric(horizontal: 5)),
-                              onPressed: event.otherExpenseItems.isEmpty ? null : () async {
-                                final unavailable = assignedExpenseNames(exceptKey: key);
-                                final available = event.otherExpenseItems.where((item) => !unavailable.contains(item['name']?.toString() ?? 'Expense')).toList();
-                                final selected = expenses.map((e) => e['name'].toString()).toSet();
-                                final result = await showDialog<Set<String>>(
-                                  context: ctx,
-                                  builder: (pickCtx) => StatefulBuilder(builder: (pickCtx, pickSet) => AlertDialog(
-                                    title: const Text('Select Other Expenses'),
-                                    content: SizedBox(width: double.maxFinite, child: available.isEmpty
-                                      ? const Text('All expenses are already assigned to other staff.')
-                                      : ListView(shrinkWrap: true, children: available.map((item) {
-                                          final name = item['name']?.toString() ?? 'Expense';
-                                          final value = (item['amount'] as num?)?.toDouble() ?? 0;
-                                          return CheckboxListTile(contentPadding: EdgeInsets.zero, dense: true, value: selected.contains(name), title: Text(name), subtitle: Text(_money(value)), onChanged: (checked) => pickSet(() { if (checked == true) selected.add(name); else selected.remove(name); }));
-                                        }).toList())),
-                                    actions: [TextButton(onPressed: () => Navigator.pop(pickCtx), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(pickCtx, selected), child: const Text('Done'))],
-                                  )),
-                                );
-                                if (result != null) setDialogState(() {
-                                  expenses.removeWhere((e) => !result.contains(e['name'].toString()));
-                                  for (final item in available) {
-                                    final name = item['name']?.toString() ?? 'Expense';
-                                    if (result.contains(name) && !expenses.any((e) => e['name'] == name)) expenses.add({'name': name, 'amount': (item['amount'] as num?)?.toDouble() ?? 0});
-                                  }
-                                });
-                              },
-                              icon: const Icon(Icons.add, size: 16), label: const Text('Other Expenses'),
-                            ),
-                            const Spacer(),
-                            SizedBox(width: 105, child: TextFormField(
-                              key: ValueKey('setting-$key'),
-                              initialValue: ((row['settingBillAmount'] as num?)?.toDouble() ?? 0).toStringAsFixed(0),
-                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                              textAlign: TextAlign.end,
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-                              decoration: const InputDecoration(isDense: true, prefixText: '₹ ', labelText: 'Settings Bill', contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 7)),
-                              onChanged: (value) => setDialogState(() {
-                                final parsed = double.tryParse(value) ?? 0;
-                                row['settingBillAmount'] = parsed < 0 ? 0.0 : parsed;
-                              }),
-                            )),
-                          ]),
+                          Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 8,
+                            runSpacing: 4,
+                            children: [
+                              TextButton.icon(
+                                style: TextButton.styleFrom(visualDensity: VisualDensity.compact, padding: const EdgeInsets.symmetric(horizontal: 4)),
+                                onPressed: event.otherExpenseItems.isEmpty ? null : () async {
+                                  final unavailable = assignedExpenseNames(exceptKey: key);
+                                  final available = event.otherExpenseItems.where((item) => !unavailable.contains(item['name']?.toString() ?? 'Expense')).toList();
+                                  final selected = expenses.map((e) => e['name'].toString()).toSet();
+                                  final result = await showDialog<Set<String>>(
+                                    context: ctx,
+                                    builder: (pickCtx) => StatefulBuilder(builder: (pickCtx, pickSet) => AlertDialog(
+                                      title: const Text('Select Other Expenses'),
+                                      content: SizedBox(width: double.maxFinite, child: available.isEmpty
+                                        ? const Text('All expenses are already assigned to other staff.')
+                                        : ListView(shrinkWrap: true, children: available.map((item) {
+                                            final name = item['name']?.toString() ?? 'Expense';
+                                            final value = (item['amount'] as num?)?.toDouble() ?? 0;
+                                            return CheckboxListTile(contentPadding: EdgeInsets.zero, dense: true, value: selected.contains(name), title: Text(name), subtitle: Text(_money(value)), onChanged: (checked) => pickSet(() { if (checked == true) selected.add(name); else selected.remove(name); }));
+                                          }).toList())),
+                                      actions: [TextButton(onPressed: () => Navigator.pop(pickCtx), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(pickCtx, selected), child: const Text('Done'))],
+                                    )),
+                                  );
+                                  if (result != null) setDialogState(() {
+                                    expenses.removeWhere((e) => !result.contains(e['name'].toString()));
+                                    for (final item in available) {
+                                      final name = item['name']?.toString() ?? 'Expense';
+                                      if (result.contains(name) && !expenses.any((e) => e['name'] == name)) expenses.add({'name': name, 'amount': (item['amount'] as num?)?.toDouble() ?? 0});
+                                    }
+                                  });
+                                },
+                                icon: const Icon(Icons.add, size: 16), label: const Text('Other Expenses'),
+                              ),
+                              SizedBox(width: 118, child: TextFormField(
+                                key: ValueKey('setting-$key'),
+                                initialValue: ((row['settingBillAmount'] as num?)?.toDouble() ?? 0).toStringAsFixed(0),
+                                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                textAlign: TextAlign.end,
+                                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+                                decoration: const InputDecoration(isDense: true, prefixText: '₹ ', labelText: 'Settings Bill', contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 7)),
+                                onChanged: (value) => setDialogState(() {
+                                  final parsed = double.tryParse(value) ?? 0;
+                                  row['settingBillAmount'] = parsed < 0 ? 0.0 : parsed;
+                                }),
+                              )),
+                            ],
+                          ),
                           Align(alignment: Alignment.centerRight, child: Text('Total: ${_money(rowTotal(person))}', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12, color: Theme.of(ctx).colorScheme.primary))),
                         ]),
                       ),
