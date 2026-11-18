@@ -11,6 +11,8 @@ class CateringBill {
   double otherExpenses;
   double settingExpenses; // Settings column
   List<Map<String, dynamic>> otherExpenseItems;
+  /// Event-local SP/CP wage add-ons; amounts never mutate master expense settings.
+  List<Map<String, dynamic>> spCpWageBreakdown;
   double taMultiplier;
   int groupSize; // 10, 11, 12, 13, 14, 15 (Default: 10)
   List<StaffItem> staffList;
@@ -26,12 +28,14 @@ class CateringBill {
     this.otherExpenses = 0.0,
     this.settingExpenses = 0.0,
     List<Map<String, dynamic>>? otherExpenseItems,
+    List<Map<String, dynamic>>? spCpWageBreakdown,
     this.taMultiplier = 3.0,
     this.groupSize = 10,
     required this.staffList,
     required this.groupGpay,
   }) : updatedAt = updatedAt ?? DateTime.now(),
-       otherExpenseItems = otherExpenseItems ?? [];
+       otherExpenseItems = otherExpenseItems ?? [],
+       spCpWageBreakdown = spCpWageBreakdown ?? [];
 
   List<StaffItem> get boys => staffList.where((s) => s.role == 'boy').toList();
   List<StaffItem> get spList => staffList.where((s) => s.role == 'sp').toList();
@@ -59,6 +63,7 @@ class CateringBill {
         'otherExpenses': otherExpenses,
         'settingExpenses': settingExpenses,
         'otherExpenseItems': otherExpenseItems,
+        'spCpWageBreakdown': spCpWageBreakdown,
         'taMultiplier': taMultiplier,
         'groupSize': groupSize,
         'staffList': staffList.map((s) => s.toMap()).toList(),
@@ -85,6 +90,7 @@ class CateringBill {
       otherExpenses: (map['otherExpenses'] as num?)?.toDouble() ?? 0.0,
       settingExpenses: (map['settingExpenses'] as num?)?.toDouble() ?? 0.0,
       otherExpenseItems: (map['otherExpenseItems'] as List<dynamic>? ?? []).whereType<Map>().map((e) => Map<String, dynamic>.from(e)).toList(),
+      spCpWageBreakdown: (map['spCpWageBreakdown'] as List<dynamic>? ?? []).whereType<Map>().map((e) => Map<String, dynamic>.from(e)).toList(),
       taMultiplier: (map['taMultiplier'] as num?)?.toDouble() ?? 3.0,
       groupSize: (map['groupSize'] as num?)?.toInt() ?? 10,
       staffList: (map['staffList'] as List<dynamic>? ?? [])

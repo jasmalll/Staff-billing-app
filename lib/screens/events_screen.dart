@@ -68,6 +68,17 @@ class _EventsScreenState extends State<EventsScreen> {
             const SizedBox(height: 10),
             _eventOptionTile(
               context: dialogContext,
+              icon: Icons.payments_outlined,
+              title: 'SP / CP Wage Breakdown',
+              subtitle: 'Staff-wise wage, Other Expenses and Settings Bill',
+              onTap: () {
+                Navigator.pop(dialogContext);
+                _showSpCpWageBreakdown(event);
+              },
+            ),
+            const SizedBox(height: 10),
+            _eventOptionTile(
+              context: dialogContext,
               icon: Icons.summarize_outlined,
               title: 'Short Event Details',
               subtitle: 'Wage and bill summary',
@@ -122,6 +133,264 @@ class _EventsScreenState extends State<EventsScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+
+  String _staffBreakdownKey(StaffItem staff) =>
+      '${staff.role}-${staff.index}-${staff.phone}-${staff.name}';
+
+  Future<double?> _editBreakdownAmount(double current, String title) async {
+    final controller = TextEditingController(text: current.toStringAsFixed(current % 1 == 0 ? 0 : 2));
+    final result = await showDialog<double>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          decoration: const InputDecoration(prefixText: '₹ ', labelText: 'Amount'),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          FilledButton(
+            onPressed: () {
+              final value = double.tryParse(controller.text.trim());
+              if (value != null && value >= 0) Navigator.pop(ctx, value);
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    return result;
+  }
+
+  Future<void> _showSpCpWageBreakdown(CateringBill event) async {
+    final staff = [...event.spList, ...event.cpList];
+    if (staff.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('This event has no SP or CP staff.')),
+      );
+      return;
+    }
+
+    // Work on a copy so Cancel never changes the saved event.
+    final rows = <String, Map<String, dynamic>>{};
+    for (final person in staff) {
+      final key = _staffBreakdownKey(person);
+      final saved = event.spCpWageBreakdown.where((e) => e['staffKey'] == key).firstOrNull;
+      rows[key] = saved == null
+          ? {
+              'staffKey': key,
+              'staffName': person.name,
+              'expenses': <Map<String, dynamic>>[],
+              'settingBillSelected': false,
+              'settingBillAmount': event.settingExpenses,
+            }
+          : {
+              ...saved,
+              'expenses': (saved['expenses'] as List<dynamic>? ?? [])
+                  .whereType<Map>()
+                  .map((e) => Map<String, dynamic>.from(e))
+                  .toList(),
+            };
+    }
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (ctx, setDialogState) {
+          double rowTotal(StaffItem person) {
+            final row = rows[_staffBreakdownKey(person)]!;
+            final extras = (row['expenses'] as List).fold<double>(
+              0, (sum, item) => sum + ((item['amount'] as num?)?.toDouble() ?? 0),
+            );
+            final setting = row['settingBillSelected'] == true
+                ? (row['settingBillAmount'] as num?)?.toDouble() ?? 0
+                : 0.0;
+            return person.getEffectiveWage() + extras + setting;
+          }
+
+          final grandTotal = staff.fold<double>(0, (sum, person) => sum + rowTotal(person));
+          return AlertDialog(
+            title: const Text('SP / CP Wage Breakdown'),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ...staff.map((person) {
+                      final key = _staffBreakdownKey(person);
+                      final row = rows[key]!;
+                      final expenses = row['expenses'] as List<Map<String, dynamic>>;
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(children: [
+                                Expanded(child: Text(person.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
+                                Text(_money(person.getEffectiveWage()), style: const TextStyle(fontWeight: FontWeight.w800)),
+                              ]),
+                              const SizedBox(height: 8),
+                              Wrap(
+                                spacing: 6,
+                                runSpacing: 6,
+                                children: [
+                                  ...expenses.map((expense) => InputChip(
+                                    label: Text('${expense['name']} ${_money((expense['amount'] as num?)?.toDouble() ?? 0)}'),
+                                    onPressed: () async {
+                                      final amount = await _editBreakdownAmount(
+                                        (expense['amount'] as num?)?.toDouble() ?? 0,
+                                        '${expense['name']} · ${person.name}',
+                                      );
+                                      if (amount != null) setDialogState(() => expense['amount'] = amount);
+                                    },
+                                    onDeleted: () => setDialogState(() => expenses.remove(expense)),
+                                    deleteIcon: const Icon(Icons.close, size: 16),
+                                  )),
+                                  ActionChip(
+                                    avatar: const Icon(Icons.add, size: 17),
+                                    label: const Text('Other Expenses'),
+                                    onPressed: event.otherExpenseItems.isEmpty ? null : () async {
+                                      final chosen = expenses.map((e) => e['name'].toString()).toSet();
+                                      final selected = <String>{...chosen};
+                                      final result = await showDialog<Set<String>>(
+                                        context: ctx,
+                                        builder: (pickCtx) => StatefulBuilder(
+                                          builder: (pickCtx, pickSet) => AlertDialog(
+                                            title: const Text('Select Other Expenses'),
+                                            content: SizedBox(
+                                              width: double.maxFinite,
+                                              child: ListView(
+                                                shrinkWrap: true,
+                                                children: event.otherExpenseItems.map((item) {
+                                                  final name = item['name']?.toString() ?? 'Expense';
+                                                  final value = (item['amount'] as num?)?.toDouble() ?? 0;
+                                                  return CheckboxListTile(
+                                                    contentPadding: EdgeInsets.zero,
+                                                    value: selected.contains(name),
+                                                    title: Text(name),
+                                                    subtitle: Text(_money(value)),
+                                                    onChanged: (checked) => pickSet(() {
+                                                      if (checked == true) selected.add(name); else selected.remove(name);
+                                                    }),
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            ),
+                                            actions: [
+                                              TextButton(onPressed: () => Navigator.pop(pickCtx), child: const Text('Cancel')),
+                                              FilledButton(onPressed: () => Navigator.pop(pickCtx, selected), child: const Text('Done')),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                      if (result != null) {
+                                        setDialogState(() {
+                                          expenses.removeWhere((e) => !result.contains(e['name'].toString()));
+                                          for (final item in event.otherExpenseItems) {
+                                            final name = item['name']?.toString() ?? 'Expense';
+                                            if (result.contains(name) && !expenses.any((e) => e['name'] == name)) {
+                                              expenses.add({
+                                                'name': name,
+                                                'amount': (item['amount'] as num?)?.toDouble() ?? 0,
+                                              });
+                                            }
+                                          }
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                              const Divider(height: 18),
+                              CheckboxListTile(
+                                dense: true,
+                                contentPadding: EdgeInsets.zero,
+                                controlAffinity: ListTileControlAffinity.leading,
+                                title: const Text('Settings Bill'),
+                                subtitle: Text(_money((row['settingBillAmount'] as num?)?.toDouble() ?? event.settingExpenses)),
+                                value: row['settingBillSelected'] == true,
+                                onChanged: (value) => setDialogState(() => row['settingBillSelected'] = value ?? false),
+                              ),
+                              if (row['settingBillSelected'] == true)
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton.icon(
+                                    onPressed: () async {
+                                      final amount = await _editBreakdownAmount(
+                                        (row['settingBillAmount'] as num?)?.toDouble() ?? event.settingExpenses,
+                                        'Settings Bill · ${person.name}',
+                                      );
+                                      if (amount != null) setDialogState(() => row['settingBillAmount'] = amount);
+                                    },
+                                    icon: const Icon(Icons.edit, size: 16),
+                                    label: const Text('Edit amount'),
+                                  ),
+                                ),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: Text('Staff Total: ${_money(rowTotal(person))}', style: TextStyle(fontWeight: FontWeight.w900, color: Theme.of(ctx).colorScheme.primary)),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                    const SizedBox(height: 6),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Theme.of(ctx).colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ...staff.map((person) => Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Text('${person.name} :- ${_money(rowTotal(person)).replaceFirst('₹', '')}', style: const TextStyle(fontWeight: FontWeight.w600)),
+                          )),
+                          const Divider(),
+                          Text('Total Bill :- ${_money(grandTotal)}', textAlign: TextAlign.right, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 17)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+              FilledButton.icon(
+                onPressed: () async {
+                  event.spCpWageBreakdown = rows.values.map((row) => Map<String, dynamic>.from(row)).toList();
+                  await StorageService.saveBill(event);
+                  final lines = <String>[];
+                  for (final person in staff) {
+                    lines.add('${person.name} :- ${_money(rowTotal(person)).replaceFirst('₹', '')}');
+                  }
+                  lines.add('');
+                  lines.add('Total Bill :- ${_money(grandTotal).replaceFirst('₹', '')}');
+                  await Clipboard.setData(ClipboardData(text: lines.join('\n')));
+                  if (dialogContext.mounted) Navigator.pop(dialogContext);
+                  if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wage breakdown saved and copied.')));
+                },
+                icon: const Icon(Icons.copy_rounded),
+                label: const Text('Save & Copy'),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
