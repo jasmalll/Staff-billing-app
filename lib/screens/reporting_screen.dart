@@ -204,7 +204,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: AppColors.primaryColor(context),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             onPressed: () {
@@ -264,7 +264,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: AppColors.primaryColor(context),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             onPressed: () {
@@ -349,7 +349,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: AppColors.primaryColor(context),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             onPressed: () {
@@ -406,10 +406,10 @@ class _ReportingScreenState extends State<ReportingScreen> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         decoration: BoxDecoration(
-                          color: isSelected ? AppColors.primary : Theme.of(context).colorScheme.surfaceContainerHighest,
+                          color: isSelected ? AppColors.primaryColor(context) : Theme.of(context).colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: isSelected ? AppColors.primary : Theme.of(context).colorScheme.outlineVariant,
+                            color: isSelected ? AppColors.primaryColor(context) : Theme.of(context).colorScheme.outlineVariant,
                             width: 1.2,
                           ),
                         ),
@@ -454,7 +454,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: AppColors.primaryColor(context),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             onPressed: () {
@@ -559,7 +559,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
             padding: const EdgeInsets.only(right: 12),
             child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primarySurface,
+                backgroundColor: AppColors.primarySurfaceColor(context),
                 foregroundColor: Colors.white,
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -612,7 +612,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
                       const SizedBox(height: 22),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: AppColors.primaryColor(context),
                           elevation: 0,
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 13),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -790,7 +790,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
                       height: 48,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: AppColors.primaryColor(context),
                           elevation: 0,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         ),

@@ -126,7 +126,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
-            Icon(Icons.cloud_sync_rounded, color: AppColors.primary),
+            Icon(Icons.cloud_sync_rounded, color: AppColors.primaryColor(context)),
             SizedBox(width: 8),
             Text('JSON Backup / Restore', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
           ],
@@ -146,7 +146,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: AppColors.primaryColor(context),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             icon: Icon(Icons.folder_open_outlined, color: Colors.white, size: 18),
@@ -225,7 +225,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ],
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
+          ? Center(child: CircularProgressIndicator(color: AppColors.primaryColor(context)))
           : SafeArea(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -364,7 +364,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                               height: 5,
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color: isSelected ? const Color(0xFF38BDF8) : AppColors.success,
+                                                color: isSelected ? Theme.of(context).colorScheme.primary : AppColors.successText(context),
                                               ),
                                             ),
                                         ],
@@ -391,7 +391,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
-                                color: billsForSelectedDate.isEmpty ? Theme.of(context).colorScheme.surfaceContainerHighest : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF123A2D) : AppColors.successLight),
+                                color: billsForSelectedDate.isEmpty ? Theme.of(context).colorScheme.surfaceContainerHighest : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF202020) : AppColors.successLight),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(

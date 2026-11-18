@@ -29,35 +29,51 @@ class StaffBillingApp extends StatelessWidget {
   ThemeData _buildTheme(Brightness brightness) {
     final dark = brightness == Brightness.dark;
     const deepTeal = Color(0xFF103B43);
-    const mint = Color(0xFF9BE5C9);
-    final surface = dark ? const Color(0xFF10272D) : Colors.white;
-    final background = dark ? const Color(0xFF081A1F) : AppColors.background;
-    final border = dark ? const Color(0xFF29464B) : AppColors.borderSubtle;
-    final scheme = ColorScheme.fromSeed(
-      seedColor: deepTeal,
+    const accentMint = Color(0xFF8CE6C1);
+
+    // Dark mode uses true black foundations with separate charcoal surfaces
+    // so cards and editable fields remain clearly distinguishable.
+    final background = dark ? const Color(0xFF000000) : AppColors.background;
+    final surface = dark ? const Color(0xFF111111) : Colors.white;
+    final inputSurface = dark ? const Color(0xFF202020) : const Color(0xFFF7FAF8);
+    final border = dark ? const Color(0xFF414141) : AppColors.borderSubtle;
+    final outlineVariant = dark ? const Color(0xFF303030) : AppColors.borderSubtle;
+
+    final generatedScheme = ColorScheme.fromSeed(
+      seedColor: dark ? accentMint : deepTeal,
       brightness: brightness,
-      primary: dark ? mint : deepTeal,
-      onPrimary: dark ? const Color(0xFF08252A) : Colors.white,
-      secondary: dark ? const Color(0xFF77D9B5) : AppColors.success,
+      primary: dark ? accentMint : deepTeal,
+      onPrimary: dark ? const Color(0xFF062016) : Colors.white,
+      secondary: dark ? const Color(0xFF78DDB5) : AppColors.success,
       surface: surface,
-      onSurface: dark ? const Color(0xFFEAF5F1) : AppColors.textPrimary,
-      onSurfaceVariant: dark ? const Color(0xFFB1C6C2) : AppColors.textSecondary,
-      error: dark ? const Color(0xFFFF9292) : AppColors.danger,
+      onSurface: dark ? const Color(0xFFF5F5F5) : AppColors.textPrimary,
+      onSurfaceVariant: dark ? const Color(0xFFBDBDBD) : AppColors.textSecondary,
+      error: dark ? const Color(0xFFFF777F) : AppColors.danger,
       outline: border,
-      outlineVariant: dark ? const Color(0xFF203A40) : AppColors.borderSubtle,
+      outlineVariant: outlineVariant,
     );
+    final scheme = dark
+        ? generatedScheme.copyWith(
+            surfaceContainerLowest: const Color(0xFF080808),
+            surfaceContainerLow: const Color(0xFF101010),
+            surfaceContainer: const Color(0xFF181818),
+            surfaceContainerHigh: const Color(0xFF222222),
+            surfaceContainerHighest: const Color(0xFF292929),
+          )
+        : generatedScheme;
     final radius = BorderRadius.circular(20);
+
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
       colorScheme: scheme,
       scaffoldBackgroundColor: background,
-      canvasColor: surface,
+      canvasColor: background,
       primaryColor: scheme.primary,
       visualDensity: VisualDensity.standard,
       fontFamily: 'Roboto',
       appBarTheme: AppBarTheme(
-        backgroundColor: dark ? const Color(0xFF0B252B) : deepTeal,
+        backgroundColor: dark ? background : deepTeal,
         foregroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
@@ -65,7 +81,10 @@ class StaffBillingApp extends StatelessWidget {
         titleSpacing: 20,
         toolbarHeight: 68,
         iconTheme: const IconThemeData(color: Colors.white),
-        titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800, letterSpacing: -.45),
+        titleTextStyle: const TextStyle(
+          color: Colors.white, fontSize: 20,
+          fontWeight: FontWeight.w800, letterSpacing: -.45,
+        ),
       ),
       textTheme: Typography.material2021().black.apply(
         bodyColor: scheme.onSurface,
@@ -82,45 +101,78 @@ class StaffBillingApp extends StatelessWidget {
         elevation: 0,
         margin: EdgeInsets.zero,
         surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: radius, side: BorderSide(color: border)),
+        shape: RoundedRectangleBorder(
+          borderRadius: radius,
+          side: BorderSide(color: border),
+        ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: dark ? const Color(0xFF142F36) : const Color(0xFFF7FAF8),
+        fillColor: inputSurface,
         contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        hintStyle: TextStyle(color: scheme.onSurfaceVariant.withValues(alpha: .75), fontSize: 14),
+        hintStyle: TextStyle(
+          color: dark ? const Color(0xFFAAAAAA) : scheme.onSurfaceVariant.withValues(alpha: .75),
+          fontSize: 14,
+        ),
         labelStyle: TextStyle(color: scheme.onSurfaceVariant, fontSize: 13),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide(color: border)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide(color: border)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide(color: scheme.primary, width: 1.7)),
+        floatingLabelStyle: TextStyle(color: scheme.primary, fontWeight: FontWeight.w700),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(color: border),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(color: border),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(color: scheme.primary, width: 1.8),
+        ),
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: scheme.primary,
+        selectionColor: scheme.primary.withValues(alpha: .28),
+        selectionHandleColor: scheme.primary,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(
         backgroundColor: scheme.primary, foregroundColor: scheme.onPrimary, elevation: 0,
         minimumSize: const Size(48, 50), padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
-        textStyle: TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+        textStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       )),
       filledButtonTheme: FilledButtonThemeData(style: FilledButton.styleFrom(
         backgroundColor: scheme.primary, foregroundColor: scheme.onPrimary, minimumSize: const Size(48, 50),
-        textStyle: TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+        textStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       )),
       outlinedButtonTheme: OutlinedButtonThemeData(style: OutlinedButton.styleFrom(
         foregroundColor: scheme.primary, side: BorderSide(color: border), minimumSize: const Size(44, 46),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       )),
-      dividerTheme: DividerThemeData(color: border, thickness: 1, space: 1),
-      snackBarTheme: SnackBarThemeData(behavior: SnackBarBehavior.floating,
-        backgroundColor: dark ? const Color(0xFF24535A) : deepTeal,
-        contentTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
-      dialogTheme: DialogThemeData(backgroundColor: surface, surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))),
-      bottomSheetTheme: BottomSheetThemeData(backgroundColor: surface, surfaceTintColor: Colors.transparent,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(26)))),
-      progressIndicatorTheme: ProgressIndicatorThemeData(color: scheme.primary, linearTrackColor: border),
-      switchTheme: SwitchThemeData(thumbColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.selected) ? scheme.primary : scheme.onSurfaceVariant),
-        trackColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.selected) ? scheme.primary.withValues(alpha: .28) : border)),
+      dividerTheme: DividerThemeData(color: outlineVariant, thickness: 1, space: 1),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: dark ? const Color(0xFF242424) : deepTeal,
+        contentTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: surface, surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: surface, surfaceTintColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(26))),
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: scheme.primary, linearTrackColor: outlineVariant,
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith((states) =>
+          states.contains(WidgetState.selected) ? scheme.primary : scheme.onSurfaceVariant),
+        trackColor: WidgetStateProperty.resolveWith((states) =>
+          states.contains(WidgetState.selected) ? scheme.primary.withValues(alpha: .28) : outlineVariant),
+      ),
     );
   }
 

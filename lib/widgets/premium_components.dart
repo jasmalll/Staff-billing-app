@@ -32,18 +32,17 @@ class GlassmorphicCard extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                base.withValues(alpha: dark ? .88 : .96),
-                base.withValues(alpha: dark ? .68 : .88),
-              ],
+              colors: dark
+                ? [const Color(0xFF171717), const Color(0xFF101010)]
+                : [base.withValues(alpha: .96), base.withValues(alpha: .88)],
             ),
             borderRadius: borderRadius,
             border: Border.all(
-              color: Colors.white.withValues(alpha: dark ? .10 : .65),
+              color: dark ? const Color(0xFF383838) : Colors.white.withValues(alpha: .65),
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: dark ? .16 : .04),
+                color: Colors.black.withValues(alpha: dark ? .35 : .04),
                 blurRadius: 22,
                 offset: const Offset(0, 8),
               ),

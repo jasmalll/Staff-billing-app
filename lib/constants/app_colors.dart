@@ -24,9 +24,19 @@ class AppColors {
   static const Color roleCp = Color(0xFFC58A32);
   static const Color roleCpLight = Color(0xFFFBF1DE);
 
+  // Context-aware primary surfaces keep dark mode neutral black/charcoal.
+  static Color primaryColor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? const Color(0xFF8CE6C1)
+          : primary;
+  static Color primarySurfaceColor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? const Color(0xFF202020)
+          : primarySurface;
+
   // High-contrast foregrounds for dark surfaces. Keep the original light palette.
   static Color primaryText(BuildContext context) => Theme.of(context).brightness == Brightness.dark
-      ? const Color(0xFF72DCEB)
+      ? const Color(0xFF8CE6C1)
       : primary;
   static Color successText(BuildContext context) => Theme.of(context).brightness == Brightness.dark
       ? const Color(0xFF55E6B5)

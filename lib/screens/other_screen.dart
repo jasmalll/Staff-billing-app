@@ -526,7 +526,7 @@ class _OtherScreenState extends State<OtherScreen> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [Color(0xFF0B3038), Color(0xFF17606A)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                  gradient: const LinearGradient(colors: [Color(0xFF1B1B1B), Color(0xFF101010)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                   borderRadius: BorderRadius.circular(18),
                 ),
                 child: Row(children: [
@@ -633,7 +633,7 @@ class _OtherScreenState extends State<OtherScreen> {
                                 Text(_money((staff['defaultWage'] as num?) ?? 430), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12, color: AppColors.success)),
                               ]),
                             ])),
-                            IconButton(tooltip: 'Edit staff', onPressed: () => _editMasterStaff(staff), icon: Icon(Icons.edit_outlined, size: 20, color: AppColors.primary)),
+                            IconButton(tooltip: 'Edit staff', onPressed: () => _editMasterStaff(staff), icon: Icon(Icons.edit_outlined, size: 20, color: AppColors.primaryColor(context))),
                             IconButton(tooltip: 'Delete staff', onPressed: () => _deleteMasterStaff(staff), icon: Icon(Icons.delete_outline_rounded, size: 20, color: AppColors.danger)),
                           ]),
                         ),
@@ -658,7 +658,7 @@ class _OtherScreenState extends State<OtherScreen> {
           child: Padding(
           padding: const EdgeInsets.all(14),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Icon(icon, color: AppColors.primary, size: 24),
+            Icon(icon, color: AppColors.primaryColor(context), size: 24),
             const SizedBox(height: 12),
             Text(value, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 22), maxLines: 1, overflow: TextOverflow.ellipsis),
             const SizedBox(height: 5),
@@ -776,9 +776,9 @@ class _OtherScreenState extends State<OtherScreen> {
         Expanded(child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: emphasize ? AppColors.primary : Theme.of(context).colorScheme.surface,
+            color: emphasize ? AppColors.primaryColor(context) : Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: emphasize ? AppColors.primary : Theme.of(context).colorScheme.outlineVariant),
+            border: Border.all(color: emphasize ? AppColors.primaryColor(context) : Theme.of(context).colorScheme.outlineVariant),
           ),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Icon(icon, size: 19, color: emphasize ? Colors.white70 : Theme.of(context).colorScheme.onSurfaceVariant),

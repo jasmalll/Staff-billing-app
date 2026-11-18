@@ -230,10 +230,10 @@ class _OutingScreenState extends State<OutingScreen> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         decoration: BoxDecoration(
-                          color: isSelected ? AppColors.primary : Theme.of(context).colorScheme.surfaceContainerHighest,
+                          color: isSelected ? AppColors.primaryColor(context) : Theme.of(context).colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: isSelected ? AppColors.primary : Theme.of(context).colorScheme.outlineVariant,
+                            color: isSelected ? AppColors.primaryColor(context) : Theme.of(context).colorScheme.outlineVariant,
                             width: 1.2,
                           ),
                         ),
@@ -293,7 +293,7 @@ class _OutingScreenState extends State<OutingScreen> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: AppColors.primaryColor(context),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             onPressed: () {
@@ -365,7 +365,7 @@ class _OutingScreenState extends State<OutingScreen> {
     await Clipboard.setData(ClipboardData(text: text));
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: AppColors.primary),
+      SnackBar(content: Text(message), backgroundColor: AppColors.primaryColor(context)),
     );
   }
 
@@ -566,14 +566,14 @@ class _OutingScreenState extends State<OutingScreen> {
             margin: const EdgeInsets.symmetric(vertical: 10),
             padding: const EdgeInsets.symmetric(horizontal: 6),
             decoration: BoxDecoration(
-              color: AppColors.primarySurface,
+              color: AppColors.primarySurfaceColor(context),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<int>(
                 value: widget.groupSize,
-                dropdownColor: AppColors.primarySurface,
+                dropdownColor: AppColors.primarySurfaceColor(context),
                 icon: Icon(Icons.arrow_drop_down, color: Colors.white, size: 16),
                 items: [10, 11, 12, 13, 14, 15].map((int val) {
                   return DropdownMenuItem<int>(
@@ -599,7 +599,7 @@ class _OutingScreenState extends State<OutingScreen> {
             margin: const EdgeInsets.symmetric(vertical: 10),
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: AppColors.primarySurface,
+              color: AppColors.primarySurfaceColor(context),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
             ),
@@ -899,7 +899,7 @@ class _OutingScreenState extends State<OutingScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
                             decoration: BoxDecoration(
-                              color: AppColors.primary,
+                              color: AppColors.primaryColor(context),
                               borderRadius: BorderRadius.vertical(top: Radius.circular(11)),
                             ),
                             child: Row(
@@ -912,7 +912,7 @@ class _OutingScreenState extends State<OutingScreen> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                                   decoration: BoxDecoration(
-                                    color: AppColors.primarySurface,
+                                    color: AppColors.primarySurfaceColor(context),
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Text(
