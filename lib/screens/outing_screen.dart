@@ -899,7 +899,8 @@ class _OutingScreenState extends State<OutingScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
                             decoration: BoxDecoration(
-                              color: AppColors.primaryColor(context),
+                              color: Colors.black,
+                              border: Border.all(color: const Color(0xFF333333)),
                               borderRadius: BorderRadius.vertical(top: Radius.circular(11)),
                             ),
                             child: Row(

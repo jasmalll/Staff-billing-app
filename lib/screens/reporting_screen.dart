@@ -790,8 +790,10 @@ class _ReportingScreenState extends State<ReportingScreen> {
                       height: 48,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor(context),
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white,
                           elevation: 0,
+                          side: const BorderSide(color: Color(0xFF333333)),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         ),
                         icon: Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 18),
