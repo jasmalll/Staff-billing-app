@@ -29,18 +29,24 @@ class OutingRowItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
     if (!item.isPresent) {
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        color: AppColors.dangerLight.withOpacity(0.4),
+        margin: const EdgeInsets.only(bottom: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+        decoration: BoxDecoration(
+          color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF351F25) : AppColors.dangerLight.withOpacity(.45),
+          borderRadius: BorderRadius.circular(13),
+          border: Border.all(color: AppColors.danger.withValues(alpha: .22)),
+        ),
         child: Row(
           children: [
             Text('${item.index}. ${item.name}', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
             const Spacer(),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(color: AppColors.dangerLight, borderRadius: BorderRadius.circular(4)),
-              child: const Text('🔴 Absent', style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.w700, fontSize: 11)),
+              decoration: BoxDecoration(color: dark ? const Color(0xFF4A252C) : AppColors.dangerLight, borderRadius: BorderRadius.circular(4)),
+              child: Text('🔴 Absent', style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.w700, fontSize: 11)),
             ),
           ],
         ),
@@ -51,9 +57,12 @@ class OutingRowItem extends StatelessWidget {
     double total = item.getTotal(multiplier);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(13),
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
       ),
       child: Row(
         children: [
@@ -70,7 +79,7 @@ class OutingRowItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (item.phone.isNotEmpty)
-                  Text(item.phone, style: const TextStyle(fontSize: 9.5, color: AppColors.textSecondary)),
+                  Text(item.phone, style: TextStyle(fontSize: 9.5, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 const SizedBox(height: 2),
 
                 // Calculation Breakdown Equation
@@ -84,11 +93,11 @@ class OutingRowItem extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: const Color(0xFFCBD5E1), width: 0.8),
+                          border: Border.all(color: Theme.of(context).colorScheme.outlineVariant, width: 0.8),
                         ),
                         child: Text(
                           '₹${item.wage.toInt()}',
-                          style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: AppColors.primary),
+                          style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: AppColors.primary),
                         ),
                       ),
                     ),
@@ -97,7 +106,7 @@ class OutingRowItem extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 4),
                         child: Text(
                           '− ₹${item.minusAmount.toInt()}',
-                          style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: AppColors.danger),
+                          style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: AppColors.danger),
                         ),
                       ),
                     Padding(
@@ -108,13 +117,13 @@ class OutingRowItem extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                           decoration: BoxDecoration(
-                            color: AppColors.successLight,
+                            color: dark ? const Color(0xFF123A2D) : AppColors.successLight,
                             borderRadius: BorderRadius.circular(4),
                             border: Border.all(color: const Color(0xFF86EFAC), width: 0.8),
                           ),
                           child: Text(
                             '+ ₹${autoTa.toInt()} TA ✎',
-                            style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: AppColors.success),
+                            style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: AppColors.success),
                           ),
                         ),
                       ),
@@ -130,7 +139,7 @@ class OutingRowItem extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8),
             child: Text(
               '= ₹${total.toInt()}',
-              style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w900, color: AppColors.primary),
+              style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w900, color: AppColors.primary),
             ),
           ),
 
@@ -143,13 +152,13 @@ class OutingRowItem extends StatelessWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: item.outingStatus == '✅'
-                    ? AppColors.successLight
-                    : (item.outingStatus == '❎' ? AppColors.dangerLight : const Color(0xFFF8FAFC)),
+                    ? (dark ? const Color(0xFF123A2D) : AppColors.successLight)
+                    : (item.outingStatus == '❎' ? (dark ? const Color(0xFF4A252C) : AppColors.dangerLight) : Theme.of(context).colorScheme.surfaceContainerHighest),
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
                   color: item.outingStatus == '✅'
                       ? const Color(0xFF86EFAC)
-                      : (item.outingStatus == '❎' ? const Color(0xFFFCA5A5) : AppColors.border),
+                      : (item.outingStatus == '❎' ? const Color(0xFFFCA5A5) : Theme.of(context).colorScheme.outlineVariant),
                 ),
               ),
               child: Text(
@@ -157,7 +166,7 @@ class OutingRowItem extends StatelessWidget {
                 style: TextStyle(
                   fontSize: item.outingStatus.isEmpty ? 11 : 12,
                   fontWeight: FontWeight.bold,
-                  color: item.outingStatus.isEmpty ? AppColors.textMuted : Colors.black,
+                  color: item.outingStatus.isEmpty ? Theme.of(context).colorScheme.outline : Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),

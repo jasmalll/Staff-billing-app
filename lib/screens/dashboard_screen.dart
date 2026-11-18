@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../constants/app_colors.dart';
 import '../models/catering_bill.dart';
 import '../services/storage_service.dart';
+import '../services/theme_service.dart';
 import '../widgets/premium_components.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -62,14 +63,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('Cater Pro', style: TextStyle(fontWeight: FontWeight.w800)),
           Text('Business overview', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: Colors.white70)),
         ]),
         actions: [
-          IconButton(tooltip: 'Manage staff', onPressed: widget.onOpenManage, icon: const Icon(Icons.groups_rounded)),
-          IconButton(tooltip: 'Calendar', onPressed: widget.onOpenCalendar, icon: const Icon(Icons.calendar_month_rounded)),
-          IconButton(tooltip: 'Refresh dashboard', onPressed: _load, icon: const Icon(Icons.refresh_rounded)),
+          IconButton(
+            tooltip: theme.brightness == Brightness.dark ? 'Switch to light mode' : 'Switch to dark mode',
+            onPressed: () => ThemeService.setMode(theme.brightness == Brightness.dark ? ThemeMode.light : ThemeMode.dark),
+            icon: Icon(theme.brightness == Brightness.dark ? Icons.light_mode_rounded : Icons.dark_mode_rounded),
+          ),
+          IconButton(tooltip: 'Manage staff', onPressed: widget.onOpenManage, icon: Icon(Icons.groups_rounded)),
+          IconButton(tooltip: 'Calendar', onPressed: widget.onOpenCalendar, icon: Icon(Icons.calendar_month_rounded)),
+          IconButton(tooltip: 'Refresh dashboard', onPressed: _load, icon: Icon(Icons.refresh_rounded)),
         ],
       ),
       body: _loading ? const Center(child: CircularProgressIndicator()) : RefreshIndicator(
@@ -80,20 +86,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [Color(0xFF17233D), Color(0xFF354D78)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                gradient: const LinearGradient(colors: [Color(0xFF0B3038), Color(0xFF17606A)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                 borderRadius: BorderRadius.circular(24),
               ),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text('TOTAL BILLING', style: TextStyle(color: Colors.white70, fontSize: 11, letterSpacing: 1.2, fontWeight: FontWeight.w700)),
+                Text('TOTAL BILLING', style: TextStyle(color: Colors.white70, fontSize: 11, letterSpacing: 1.2, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 8),
-                Text(_money(billing), style: const TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w800, letterSpacing: -.8)),
+                Text(_money(billing), style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w800, letterSpacing: -.8)),
                 const SizedBox(height: 16),
                 Row(children: [
                   _heroMetric('Events', '${monthly.length}'),
                   const SizedBox(width: 22),
                   _heroMetric('Present entries', '$present'),
                   const Spacer(),
-                  const Icon(Icons.trending_up_rounded, color: Color(0xFF86EFAC), size: 30),
+                  Icon(Icons.trending_up_rounded, color: Color(0xFF86EFAC), size: 30),
                 ]),
               ]),
             ),
@@ -109,7 +115,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Container(width: 42, height: 42, decoration: BoxDecoration(color: theme.colorScheme.primary.withValues(alpha: .10), borderRadius: BorderRadius.circular(13)), child: Icon(Icons.event_available_rounded, color: theme.colorScheme.primary)),
                     const SizedBox(width: 11),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      const Text('Event Management', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+                      Text('Event Management', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
                       Text('${_bills.length} saved events · Staff counts & Total TA', style: theme.textTheme.bodySmall),
                     ])),
                     Icon(Icons.arrow_forward_ios_rounded, size: 16, color: theme.colorScheme.primary),
@@ -127,9 +133,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             const SizedBox(height: 22),
             Row(children: [Text('Monthly analytics', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)), const Spacer(),
-              IconButton(onPressed: () => setState(() => _month = DateTime(_month.year, _month.month - 1)), icon: const Icon(Icons.chevron_left_rounded)),
-              Text(DateFormat('MMM yyyy').format(_month), style: const TextStyle(fontWeight: FontWeight.w700)),
-              IconButton(onPressed: _month.year == now.year && _month.month == now.month ? null : () => setState(() => _month = DateTime(_month.year, _month.month + 1)), icon: const Icon(Icons.chevron_right_rounded)),
+              IconButton(onPressed: () => setState(() => _month = DateTime(_month.year, _month.month - 1)), icon: Icon(Icons.chevron_left_rounded)),
+              Text(DateFormat('MMM yyyy').format(_month), style: TextStyle(fontWeight: FontWeight.w700)),
+              IconButton(onPressed: _month.year == now.year && _month.month == now.month ? null : () => setState(() => _month = DateTime(_month.year, _month.month + 1)), icon: Icon(Icons.chevron_right_rounded)),
             ]),
             const SizedBox(height: 10),
             GridView.count(
@@ -143,7 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             ),
             const SizedBox(height: 14),
-            Card(child: Padding(padding: const EdgeInsets.all(15), child: Row(children: [Icon(change == null || change >= 0 ? Icons.trending_up_rounded : Icons.trending_down_rounded, color: change == null || change >= 0 ? const Color(0xFF16A36A) : const Color(0xFFDC4545)), const SizedBox(width: 10), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const Text('Compared with previous month', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)), Text(change == null ? 'No previous month data' : '${change >= 0 ? '+' : ''}${change.toStringAsFixed(1)}% billing', style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800))])), Text(_money(previousBilling), style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12))]))),
+            Card(child: Padding(padding: const EdgeInsets.all(15), child: Row(children: [Icon(change == null || change >= 0 ? Icons.trending_up_rounded : Icons.trending_down_rounded, color: change == null || change >= 0 ? const Color(0xFF16A36A) : const Color(0xFFDC4545)), const SizedBox(width: 10), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Compared with previous month', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)), Text(change == null ? 'No previous month data' : '${change >= 0 ? '+' : ''}${change.toStringAsFixed(1)}% billing', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800))])), Text(_money(previousBilling), style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12))]))),
             const SizedBox(height: 22),
             _sectionTitle('Monthly breakdown'),
             const SizedBox(height: 10),
@@ -161,9 +167,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 margin: const EdgeInsets.only(bottom: 9),
                 child: ListTile(
                   leading: Container(width: 42, height: 42, decoration: BoxDecoration(color: theme.colorScheme.primary.withValues(alpha: .09), borderRadius: BorderRadius.circular(13)), child: Icon(Icons.event_note_rounded, color: theme.colorScheme.primary)),
-                  title: Text(bill.eventName.isNotEmpty ? bill.eventName : (bill.auditoriumName.isEmpty ? 'Untitled event' : bill.auditoriumName), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700)),
+                  title: Text(bill.eventName.isNotEmpty ? bill.eventName : (bill.auditoriumName.isEmpty ? 'Untitled event' : bill.auditoriumName), maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w700)),
                   subtitle: Text(DateFormat('dd MMM yyyy').format(bill.date)),
-                  trailing: Text(_money(bill.getAllTotalBill(bill.taMultiplier)), style: const TextStyle(fontWeight: FontWeight.w800)),
+                  trailing: Text(_money(bill.getAllTotalBill(bill.taMultiplier)), style: TextStyle(fontWeight: FontWeight.w800)),
                 ),
               )),
             const SizedBox(height: 14),
@@ -174,10 +180,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _quickCount(String label, int value) => Padding(padding: const EdgeInsets.only(right: 4), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('$value', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)), Text(label, style: Theme.of(context).textTheme.labelSmall)]));
-  Widget _heroMetric(String label, String value) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(value, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)), Text(label, style: const TextStyle(color: Colors.white70, fontSize: 10))]);
+  Widget _quickCount(String label, int value) => Padding(padding: const EdgeInsets.only(right: 4), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('$value', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)), Text(label, style: Theme.of(context).textTheme.labelSmall)]));
+  Widget _heroMetric(String label, String value) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(value, style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)), Text(label, style: TextStyle(color: Colors.white70, fontSize: 10))]);
   Widget _sectionTitle(String title) => Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800));
   Widget _metric(String title, String value, IconData icon, Color accent) => AnalyticsItem(title: title, value: value, icon: icon, accent: accent);
-  Widget _breakdown(String label, double value, double total) { final ratio = total <= 0 ? 0.0 : (value / total).clamp(0.0, 1.0); return Padding(padding: const EdgeInsets.only(bottom: 13), child: Column(children: [Row(children: [Expanded(child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600))), Text(_money(value), style: const TextStyle(fontWeight: FontWeight.w700))]), const SizedBox(height: 7), ClipRRect(borderRadius: BorderRadius.circular(20), child: LinearProgressIndicator(value: ratio, minHeight: 7, backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest))])); }
-  Widget _emptyState() => Container(padding: const EdgeInsets.all(22), decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(18), border: Border.all(color: AppColors.border)), child: const Column(children: [Icon(Icons.event_available_rounded, size: 32, color: AppColors.textMuted), SizedBox(height: 8), Text('No saved events yet', style: TextStyle(fontWeight: FontWeight.w700)), Text('Create an event in Outing and it will appear here.', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))]));
+  Widget _breakdown(String label, double value, double total) { final ratio = total <= 0 ? 0.0 : (value / total).clamp(0.0, 1.0); return Padding(padding: const EdgeInsets.only(bottom: 13), child: Column(children: [Row(children: [Expanded(child: Text(label, style: TextStyle(fontWeight: FontWeight.w600))), Text(_money(value), style: TextStyle(fontWeight: FontWeight.w700))]), const SizedBox(height: 7), ClipRRect(borderRadius: BorderRadius.circular(20), child: LinearProgressIndicator(value: ratio, minHeight: 7, backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest))])); }
+  Widget _emptyState() => Container(padding: const EdgeInsets.all(22), decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(18), border: Border.all(color: Theme.of(context).colorScheme.outlineVariant)), child: Column(children: [Icon(Icons.event_available_rounded, size: 32, color: Theme.of(context).colorScheme.outline), SizedBox(height: 8), Text('No saved events yet', style: TextStyle(fontWeight: FontWeight.w700)), Text('Create an event in Outing and it will appear here.', style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant))]));
 }

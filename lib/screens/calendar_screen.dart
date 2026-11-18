@@ -124,7 +124,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Row(
+        title: Row(
           children: [
             Icon(Icons.cloud_sync_rounded, color: AppColors.primary),
             SizedBox(width: 8),
@@ -137,8 +137,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
         actions: [
           TextButton.icon(
-            icon: const Icon(Icons.file_upload_outlined, color: AppColors.success, size: 18),
-            label: const Text('Export backup file', style: TextStyle(fontWeight: FontWeight.w700)),
+            icon: Icon(Icons.file_upload_outlined, color: AppColors.success, size: 18),
+            label: Text('Export backup file', style: TextStyle(fontWeight: FontWeight.w700)),
             onPressed: () {
               Navigator.pop(ctx);
               _saveLocalBackup();
@@ -149,8 +149,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
               backgroundColor: AppColors.primary,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
-            icon: const Icon(Icons.folder_open_outlined, color: Colors.white, size: 18),
-            label: const Text('Choose JSON to restore', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            icon: Icon(Icons.folder_open_outlined, color: Colors.white, size: 18),
+            label: Text('Choose JSON to restore', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             onPressed: () {
               Navigator.pop(ctx);
               _restoreLocalBackup();
@@ -167,7 +167,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Delete Event Bill?', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+        title: Text('Delete Event Bill?', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
         content: Text(
           'Are you sure you want to delete "${b.auditoriumName.isEmpty ? 'Catering Event' : b.auditoriumName}"? This action cannot be reversed.',
           style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
@@ -187,7 +187,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               await StorageService.deleteBill(b.id);
               _fetchBills();
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('Delete', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -203,7 +203,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: widget.embedded ? null : AppBar(
-        title: const Text('Event Calendar', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: Colors.white)),
+        title: Text('Event Calendar', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: Colors.white)),
         actions: [
           if (isBackupProcessing)
             const Center(
@@ -214,12 +214,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
             )
           else
             IconButton(
-              icon: const Icon(Icons.cloud_rounded, color: Colors.white, size: 22),
+              icon: Icon(Icons.cloud_rounded, color: Colors.white, size: 22),
               tooltip: 'Local backup and restore',
               onPressed: _showLocalBackupRestoreDialog,
             ),
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: Colors.white, size: 22),
+            icon: Icon(Icons.refresh_rounded, color: Colors.white, size: 22),
             onPressed: _fetchBills,
           ),
         ],
@@ -247,12 +247,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   IconButton(
                                     tooltip: 'Backup and restore',
                                     onPressed: _showLocalBackupRestoreDialog,
-                                    icon: const Icon(Icons.cloud_sync_rounded),
+                                    icon: Icon(Icons.cloud_sync_rounded),
                                   ),
                                 IconButton(
                                   tooltip: 'Refresh calendar',
                                   onPressed: _fetchBills,
-                                  icon: const Icon(Icons.refresh_rounded),
+                                  icon: Icon(Icons.refresh_rounded),
                                 ),
                               ],
                             ),
@@ -277,7 +277,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   IconButton(
-                                    icon: const Icon(Icons.chevron_left_rounded, size: 22),
+                                    icon: Icon(Icons.chevron_left_rounded, size: 22),
                                     onPressed: () => setState(() => selectedMonth = DateTime(selectedMonth.year, selectedMonth.month - 1)),
                                   ),
                                   Text(
@@ -285,7 +285,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Theme.of(context).colorScheme.onSurface),
                                   ),
                                   IconButton(
-                                    icon: const Icon(Icons.chevron_right_rounded, size: 22),
+                                    icon: Icon(Icons.chevron_right_rounded, size: 22),
                                     onPressed: () => setState(() => selectedMonth = DateTime(selectedMonth.year, selectedMonth.month + 1)),
                                   ),
                                 ],
@@ -391,7 +391,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
-                                color: billsForSelectedDate.isEmpty ? Theme.of(context).colorScheme.surfaceContainerHighest : AppColors.successLight,
+                                color: billsForSelectedDate.isEmpty ? Theme.of(context).colorScheme.surfaceContainerHighest : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF123A2D) : AppColors.successLight),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(
@@ -472,7 +472,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                             IconButton(
                                               padding: EdgeInsets.zero,
                                               constraints: const BoxConstraints(),
-                                              icon: const Icon(Icons.delete_outline_rounded, color: AppColors.danger, size: 20),
+                                              icon: Icon(Icons.delete_outline_rounded, color: AppColors.danger, size: 20),
                                               onPressed: () => _confirmDeleteBill(b),
                                             ),
                                           ],
@@ -503,7 +503,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                                 ),
                                                 Text(
                                                   'TA: ₹${totTa.toInt()}',
-                                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.success),
+                                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.success),
                                                 ),
                                               ],
                                             ),

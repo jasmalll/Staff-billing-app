@@ -122,14 +122,14 @@ class _OtherScreenState extends State<OtherScreen> {
     final wageCtrl = TextEditingController(text: '430');
     var category = 'BOY';
     final ok = await showDialog<bool>(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx, setDialogState) => AlertDialog(
-      title: const Text('Add manpower'),
+      title: Text('Add manpower'),
       content: Column(mainAxisSize: MainAxisSize.min, children: [
-        TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Full name')),
-        TextField(controller: phoneCtrl, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Phone number (required)')),
-        TextField(controller: wageCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Default wage (₹)')),
-        DropdownButtonFormField<String>(value: category, decoration: const InputDecoration(labelText: 'Category'), items: const [DropdownMenuItem(value: 'BOY', child: Text('Boy')), DropdownMenuItem(value: 'SP', child: Text('SP')), DropdownMenuItem(value: 'CP', child: Text('CP'))], onChanged: (v) { if (v != null) setDialogState(() => category = v); }),
+        TextField(controller: nameCtrl, decoration: InputDecoration(labelText: 'Full name')),
+        TextField(controller: phoneCtrl, keyboardType: TextInputType.phone, decoration: InputDecoration(labelText: 'Phone number (required)')),
+        TextField(controller: wageCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: InputDecoration(labelText: 'Default wage (₹)')),
+        DropdownButtonFormField<String>(value: category, decoration: InputDecoration(labelText: 'Category'), items: const [DropdownMenuItem(value: 'BOY', child: Text('Boy')), DropdownMenuItem(value: 'SP', child: Text('SP')), DropdownMenuItem(value: 'CP', child: Text('CP'))], onChanged: (v) { if (v != null) setDialogState(() => category = v); }),
       ]),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Save staff'))],
+      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Save staff'))],
     )));
     final name = nameCtrl.text.trim();
     final phone = phoneCtrl.text.trim();
@@ -152,14 +152,14 @@ class _OtherScreenState extends State<OtherScreen> {
     final wageCtrl = TextEditingController(text: (staff['defaultWage'] as num? ?? 430).toString());
     var category = staff['category']?.toString() ?? 'BOY';
     final ok = await showDialog<bool>(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx, setDialogState) => AlertDialog(
-      title: const Text('Edit manpower'),
+      title: Text('Edit manpower'),
       content: Column(mainAxisSize: MainAxisSize.min, children: [
-        TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Name')),
-        TextField(controller: phoneCtrl, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'Phone')),
-        TextField(controller: wageCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Default wage (₹)')),
-        DropdownButtonFormField<String>(value: category, decoration: const InputDecoration(labelText: 'Category'), items: const [DropdownMenuItem(value: 'SP', child: Text('SP')), DropdownMenuItem(value: 'CP', child: Text('CP')), DropdownMenuItem(value: 'BOY', child: Text('Boy'))], onChanged: (v) { if (v != null) setDialogState(() => category = v); }),
+        TextField(controller: nameCtrl, decoration: InputDecoration(labelText: 'Name')),
+        TextField(controller: phoneCtrl, keyboardType: TextInputType.phone, decoration: InputDecoration(labelText: 'Phone')),
+        TextField(controller: wageCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: InputDecoration(labelText: 'Default wage (₹)')),
+        DropdownButtonFormField<String>(value: category, decoration: InputDecoration(labelText: 'Category'), items: const [DropdownMenuItem(value: 'SP', child: Text('SP')), DropdownMenuItem(value: 'CP', child: Text('CP')), DropdownMenuItem(value: 'BOY', child: Text('Boy'))], onChanged: (v) { if (v != null) setDialogState(() => category = v); }),
       ]),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Save'))],
+      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Save'))],
     )));
     final name = nameCtrl.text.trim(); final phone = phoneCtrl.text.trim(); final wage = double.tryParse(wageCtrl.text.trim());
     nameCtrl.dispose(); phoneCtrl.dispose(); wageCtrl.dispose();
@@ -175,9 +175,9 @@ class _OtherScreenState extends State<OtherScreen> {
 
   Future<void> _deleteMasterStaff(Map<String, dynamic> staff) async {
     final ok = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
-      title: const Text('Delete manpower?'),
+      title: Text('Delete manpower?'),
       content: Text('Remove ${staff['name']} from the directory? Existing bills will not be changed.'),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Delete'))],
+      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Delete'))],
     ));
     if (ok != true) return;
     await StorageService.deleteMasterStaff(staff['phone']?.toString() ?? '');
@@ -197,12 +197,12 @@ class _OtherScreenState extends State<OtherScreen> {
     final emailCtrl = TextEditingController();
     final passwordCtrl = TextEditingController();
     final ok = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
-      title: const Text('Supervisor sign in'),
+      title: Text('Supervisor sign in'),
       content: Column(mainAxisSize: MainAxisSize.min, children: [
-        TextField(controller: emailCtrl, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'Email')),
-        TextField(controller: passwordCtrl, obscureText: true, decoration: const InputDecoration(labelText: 'Password')),
+        TextField(controller: emailCtrl, keyboardType: TextInputType.emailAddress, decoration: InputDecoration(labelText: 'Email')),
+        TextField(controller: passwordCtrl, obscureText: true, decoration: InputDecoration(labelText: 'Password')),
       ]),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Sign in'))],
+      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Sign in'))],
     ));
     final email = emailCtrl.text.trim(); final password = passwordCtrl.text;
     emailCtrl.dispose(); passwordCtrl.dispose();
@@ -265,12 +265,12 @@ class _OtherScreenState extends State<OtherScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Add master inventory item'),
+        title: Text('Add master inventory item'),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
-          TextField(controller: nameCtrl, autofocus: true, decoration: const InputDecoration(labelText: 'Item name')),
-          TextField(controller: countCtrl, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Total quantity')),
+          TextField(controller: nameCtrl, autofocus: true, decoration: InputDecoration(labelText: 'Item name')),
+          TextField(controller: countCtrl, keyboardType: TextInputType.number, decoration: InputDecoration(labelText: 'Total quantity')),
         ]),
-        actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Add'))],
+        actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Add'))],
       ),
     );
     final name = nameCtrl.text.trim();
@@ -294,12 +294,12 @@ class _OtherScreenState extends State<OtherScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Edit master item'),
+        title: Text('Edit master item'),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
-          TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Item name')),
-          TextField(controller: countCtrl, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Total quantity')),
+          TextField(controller: nameCtrl, decoration: InputDecoration(labelText: 'Item name')),
+          TextField(controller: countCtrl, keyboardType: TextInputType.number, decoration: InputDecoration(labelText: 'Total quantity')),
         ]),
-        actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Save'))],
+        actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Save'))],
       ),
     );
     final name = nameCtrl.text.trim();
@@ -321,9 +321,9 @@ class _OtherScreenState extends State<OtherScreen> {
 
   Future<void> _deleteMasterItem(InventoryItem item) async {
     final ok = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
-      title: const Text('Delete inventory item?'),
+      title: Text('Delete inventory item?'),
       content: Text('Remove "${item.name}" from the master catalog and all station templates?'),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Delete'))],
+      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Delete'))],
     ));
     if (ok != true) return;
     setState(() {
@@ -338,9 +338,9 @@ class _OtherScreenState extends State<OtherScreen> {
   Future<void> _addStation() async {
     final ctrl = TextEditingController();
     final ok = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
-      title: const Text('New counter station'),
-      content: TextField(controller: ctrl, autofocus: true, decoration: const InputDecoration(labelText: 'Counter name')),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Create'))],
+      title: Text('New counter station'),
+      content: TextField(controller: ctrl, autofocus: true, decoration: InputDecoration(labelText: 'Counter name')),
+      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Create'))],
     ));
     final name = ctrl.text.trim();
     ctrl.dispose();
@@ -359,10 +359,10 @@ class _OtherScreenState extends State<OtherScreen> {
     final ok = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
       title: Text('Add item to ${station.name}'),
       content: Column(mainAxisSize: MainAxisSize.min, children: [
-        TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Custom item name')),
-        TextField(controller: quantityCtrl, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Quantity')),
+        TextField(controller: nameCtrl, decoration: InputDecoration(labelText: 'Custom item name')),
+        TextField(controller: quantityCtrl, keyboardType: TextInputType.number, decoration: InputDecoration(labelText: 'Quantity')),
       ]),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Add'))],
+      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Add'))],
     ));
     final name = nameCtrl.text.trim();
     final quantity = int.tryParse(quantityCtrl.text.trim()) ?? 0;
@@ -379,8 +379,8 @@ class _OtherScreenState extends State<OtherScreen> {
     final ctrl = TextEditingController(text: allocation.quantity.toString());
     final ok = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
       title: Text('${allocation.itemName} · ${station.name}'),
-      content: TextField(controller: ctrl, autofocus: true, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Allocated quantity')),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Save'))],
+      content: TextField(controller: ctrl, autofocus: true, keyboardType: TextInputType.number, decoration: InputDecoration(labelText: 'Allocated quantity')),
+      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Save'))],
     ));
     final quantity = int.tryParse(ctrl.text.trim());
     ctrl.dispose();
@@ -396,17 +396,17 @@ class _OtherScreenState extends State<OtherScreen> {
         dense: true,
         contentPadding: EdgeInsets.zero,
         title: Text(a.itemName),
-        trailing: Text('${a.quantity}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+        trailing: Text('${a.quantity}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
         onTap: () { Navigator.pop(ctx); _editAllocation(station, a); },
       )).toList()))),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close'))],
+      actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Close'))],
     ));
   }
 
   Future<void> _deleteStation(CounterStation station) async {
     final ok = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
-      title: const Text('Remove counter?'), content: Text('Remove ${station.name}?'),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Remove'))],
+      title: Text('Remove counter?'), content: Text('Remove ${station.name}?'),
+      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Remove'))],
     ));
     if (ok != true) return;
     setState(() => _inventory.stations.removeWhere((s) => s.id == station.id));
@@ -420,12 +420,12 @@ class _OtherScreenState extends State<OtherScreen> {
     final ok = await showDialog<bool>(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx, setDialogState) => AlertDialog(
       title: Text('Allowance · ${row.staffName}'),
       content: Column(mainAxisSize: MainAxisSize.min, children: [
-        TextField(controller: amountCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Extra allowance (₹)')),
+        TextField(controller: amountCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: InputDecoration(labelText: 'Extra allowance (₹)')),
         const SizedBox(height: 10),
-        DropdownButtonFormField<String>(value: source, decoration: const InputDecoration(labelText: 'Deduct from'), items: const [DropdownMenuItem(value: 'Other Expenses', child: Text('Other Expenses')), DropdownMenuItem(value: 'Setting Bill', child: Text('Setting Bill'))], onChanged: (v) { if (v != null) setDialogState(() => source = v); }),
-        TextField(controller: tagCtrl, decoration: const InputDecoration(labelText: 'Audit tag (e.g. Reporting charge)')),
+        DropdownButtonFormField<String>(value: source, decoration: InputDecoration(labelText: 'Deduct from'), items: const [DropdownMenuItem(value: 'Other Expenses', child: Text('Other Expenses')), DropdownMenuItem(value: 'Setting Bill', child: Text('Setting Bill'))], onChanged: (v) { if (v != null) setDialogState(() => source = v); }),
+        TextField(controller: tagCtrl, decoration: InputDecoration(labelText: 'Audit tag (e.g. Reporting charge)')),
       ]),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Save allowance'))],
+      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Save allowance'))],
     )));
     final amount = double.tryParse(amountCtrl.text.trim());
     final tag = tagCtrl.text.trim();
@@ -448,13 +448,13 @@ class _OtherScreenState extends State<OtherScreen> {
     final baseCtrl = TextEditingController(text: '0');
     var role = 'sp';
     final ok = await showDialog<bool>(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx, setDialogState) => AlertDialog(
-      title: const Text('Add settlement row'),
+      title: Text('Add settlement row'),
       content: Column(mainAxisSize: MainAxisSize.min, children: [
-        TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Staff name')),
-        TextField(controller: baseCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Base pay (₹)')),
-        DropdownButtonFormField<String>(value: role, items: const [DropdownMenuItem(value: 'sp', child: Text('SP')), DropdownMenuItem(value: 'cp', child: Text('CP'))], onChanged: (v) { if (v != null) setDialogState(() => role = v); }, decoration: const InputDecoration(labelText: 'Category')),
+        TextField(controller: nameCtrl, decoration: InputDecoration(labelText: 'Staff name')),
+        TextField(controller: baseCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: InputDecoration(labelText: 'Base pay (₹)')),
+        DropdownButtonFormField<String>(value: role, items: const [DropdownMenuItem(value: 'sp', child: Text('SP')), DropdownMenuItem(value: 'cp', child: Text('CP'))], onChanged: (v) { if (v != null) setDialogState(() => role = v); }, decoration: InputDecoration(labelText: 'Category')),
       ]),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Add'))],
+      actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Add'))],
     )));
     final name = nameCtrl.text.trim();
     final base = double.tryParse(baseCtrl.text.trim()) ?? -1;
@@ -481,13 +481,13 @@ class _OtherScreenState extends State<OtherScreen> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('Appearance', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+              Text('Appearance', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
               Text('Choose how Cater Pro looks on this device.', style: Theme.of(context).textTheme.bodySmall),
               const SizedBox(height: 14),
-              RadioListTile<ThemeMode>(contentPadding: EdgeInsets.zero, value: ThemeMode.light, groupValue: mode, title: const Text('Light mode'), secondary: const Icon(Icons.light_mode_outlined), onChanged: (v) { if (v != null) ThemeService.setMode(v); }),
-              RadioListTile<ThemeMode>(contentPadding: EdgeInsets.zero, value: ThemeMode.dark, groupValue: mode, title: const Text('Dark mode'), secondary: const Icon(Icons.dark_mode_outlined), onChanged: (v) { if (v != null) ThemeService.setMode(v); }),
-              RadioListTile<ThemeMode>(contentPadding: EdgeInsets.zero, value: ThemeMode.system, groupValue: mode, title: const Text('System default'), secondary: const Icon(Icons.settings_brightness_outlined), onChanged: (v) { if (v != null) ThemeService.setMode(v); }),
+              RadioListTile<ThemeMode>(contentPadding: EdgeInsets.zero, value: ThemeMode.light, groupValue: mode, title: Text('Light mode'), secondary: Icon(Icons.light_mode_outlined), onChanged: (v) { if (v != null) ThemeService.setMode(v); }),
+              RadioListTile<ThemeMode>(contentPadding: EdgeInsets.zero, value: ThemeMode.dark, groupValue: mode, title: Text('Dark mode'), secondary: Icon(Icons.dark_mode_outlined), onChanged: (v) { if (v != null) ThemeService.setMode(v); }),
+              RadioListTile<ThemeMode>(contentPadding: EdgeInsets.zero, value: ThemeMode.system, groupValue: mode, title: Text('System default'), secondary: Icon(Icons.settings_brightness_outlined), onChanged: (v) { if (v != null) ThemeService.setMode(v); }),
             ]),
           ),
         ),
@@ -512,10 +512,10 @@ class _OtherScreenState extends State<OtherScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Staff Directory', style: TextStyle(fontWeight: FontWeight.w800)),
+        title: Text('Staff Directory', style: TextStyle(fontWeight: FontWeight.w800)),
         actions: [
-          IconButton(tooltip: 'Appearance settings', onPressed: _showAppearanceSettings, icon: const Icon(Icons.palette_outlined)),
-          IconButton(tooltip: 'Refresh', onPressed: _initialize, icon: const Icon(Icons.refresh_rounded)),
+          IconButton(tooltip: 'Appearance settings', onPressed: _showAppearanceSettings, icon: Icon(Icons.palette_outlined)),
+          IconButton(tooltip: 'Refresh', onPressed: _initialize, icon: Icon(Icons.refresh_rounded)),
         ],
       ),
       body: SafeArea(
@@ -526,16 +526,16 @@ class _OtherScreenState extends State<OtherScreen> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [Color(0xFF17233D), Color(0xFF293B60)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                  gradient: const LinearGradient(colors: [Color(0xFF0B3038), Color(0xFF17606A)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                   borderRadius: BorderRadius.circular(18),
                 ),
                 child: Row(children: [
-                  Container(width: 48, height: 48, decoration: BoxDecoration(color: Colors.white.withOpacity(.14), borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.groups_rounded, color: Colors.white, size: 27)),
+                  Container(width: 48, height: 48, decoration: BoxDecoration(color: Colors.white.withOpacity(.14), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.groups_rounded, color: Colors.white, size: 27)),
                   const SizedBox(width: 14),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    const Text('Your team', style: TextStyle(color: Colors.white70, fontSize: 13)),
-                    Text('${_masterStaff.length} staff members', style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800)),
-                    const Text('Manage names, phone numbers and default wages', style: TextStyle(color: Colors.white70, fontSize: 11)),
+                    Text('Your team', style: TextStyle(color: Colors.white70, fontSize: 13)),
+                    Text('${_masterStaff.length} staff members', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800)),
+                    Text('Manage names, phone numbers and default wages', style: TextStyle(color: Colors.white70, fontSize: 11)),
                   ])),
                   IconButton(onPressed: _showCloudAuthDialog, tooltip: SupabaseService.isSignedIn ? 'Cloud account' : 'Cloud sign in', icon: Icon(SupabaseService.isSignedIn ? Icons.cloud_done_rounded : Icons.cloud_sync_rounded, color: Colors.white)),
                 ]),
@@ -548,12 +548,12 @@ class _OtherScreenState extends State<OtherScreen> {
                 onChanged: (value) => setState(() => _staffSearch = value),
                 decoration: InputDecoration(
                   hintText: 'Search name, phone, wage or category',
-                  prefixIcon: const Icon(Icons.search_rounded),
-                  suffixIcon: _staffSearch.isEmpty ? null : IconButton(icon: const Icon(Icons.close_rounded), onPressed: () { _staffSearchController.clear(); setState(() => _staffSearch = ''); }),
+                  prefixIcon: Icon(Icons.search_rounded),
+                  suffixIcon: _staffSearch.isEmpty ? null : IconButton(icon: Icon(Icons.close_rounded), onPressed: () { _staffSearchController.clear(); setState(() => _staffSearch = ''); }),
                   filled: true, fillColor: Theme.of(context).colorScheme.surface,
                   contentPadding: const EdgeInsets.symmetric(vertical: 14),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.border)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.border)),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
                 ),
               ),
             ),
@@ -570,15 +570,15 @@ class _OtherScreenState extends State<OtherScreen> {
                     )),
                 ]))),
                 const SizedBox(width: 8),
-                FilledButton.icon(onPressed: _addMasterStaff, icon: const Icon(Icons.person_add_alt_1_rounded, size: 18), label: const Text('Add')),
+                FilledButton.icon(onPressed: _addMasterStaff, icon: Icon(Icons.person_add_alt_1_rounded, size: 18), label: Text('Add')),
               ]),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 2),
               child: Row(children: [
-                Text('${filteredStaff.length} results', style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
+                Text('${filteredStaff.length} results', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12, fontWeight: FontWeight.w600)),
                 const Spacer(),
-                const Text('NAME · PHONE · WAGE', style: TextStyle(color: AppColors.textMuted, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: .5)),
+                Text('NAME · PHONE · WAGE', style: TextStyle(color: Theme.of(context).colorScheme.outline, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: .5)),
               ]),
             ),
             const SizedBox(height: 6),
@@ -590,14 +590,14 @@ class _OtherScreenState extends State<OtherScreen> {
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 420),
                         child: Column(mainAxisSize: MainAxisSize.min, children: [
-                          Icon(_masterStaff.isEmpty ? Icons.person_add_alt_1_rounded : Icons.search_off_rounded, size: 40, color: AppColors.textMuted),
+                          Icon(_masterStaff.isEmpty ? Icons.person_add_alt_1_rounded : Icons.search_off_rounded, size: 40, color: Theme.of(context).colorScheme.outline),
                           const SizedBox(height: 8),
-                          Text(_masterStaff.isEmpty ? 'No staff added yet' : 'No matching staff found', textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+                          Text(_masterStaff.isEmpty ? 'No staff added yet' : 'No matching staff found', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
                           const SizedBox(height: 4),
-                          Text(_masterStaff.isEmpty ? 'Add your first team member to get started.' : 'Try another name, phone number, wage or category.', textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary)),
+                          Text(_masterStaff.isEmpty ? 'Add your first team member to get started.' : 'Try another name, phone number, wage or category.', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
                           if (_masterStaff.isEmpty) ...[
                             const SizedBox(height: 10),
-                            FilledButton.icon(onPressed: _addMasterStaff, icon: const Icon(Icons.add), label: const Text('Add staff')),
+                            FilledButton.icon(onPressed: _addMasterStaff, icon: Icon(Icons.add), label: Text('Add staff')),
                           ],
                         ]),
                       ),
@@ -619,22 +619,22 @@ class _OtherScreenState extends State<OtherScreen> {
                             Container(width: 42, height: 42, alignment: Alignment.center, decoration: BoxDecoration(color: color.withOpacity(.10), borderRadius: BorderRadius.circular(12)), child: Text((staff['name']?.toString().trim().isNotEmpty == true ? staff['name'].toString().trim()[0] : '?').toUpperCase(), style: TextStyle(color: color, fontWeight: FontWeight.w800, fontSize: 17))),
                             const SizedBox(width: 12),
                             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                              Text(staff['name']?.toString() ?? '', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: AppColors.textPrimary)),
+                              Text(staff['name']?.toString() ?? '', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: Theme.of(context).colorScheme.onSurface)),
                               const SizedBox(height: 4),
                               Row(children: [
-                                const Icon(Icons.call_outlined, size: 13, color: AppColors.textMuted),
+                                Icon(Icons.call_outlined, size: 13, color: Theme.of(context).colorScheme.outline),
                                 const SizedBox(width: 4),
-                                Expanded(child: Text(staff['phone']?.toString() ?? '', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text(staff['phone']?.toString() ?? '', style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant), maxLines: 1, overflow: TextOverflow.ellipsis)),
                               ]),
                               const SizedBox(height: 6),
                               Row(children: [
                                 Container(padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3), decoration: BoxDecoration(color: color.withOpacity(.10), borderRadius: BorderRadius.circular(6)), child: Text(category == 'BOY' ? 'BOY' : category, style: TextStyle(color: color, fontWeight: FontWeight.w800, fontSize: 10))),
                                 const SizedBox(width: 7),
-                                Text(_money((staff['defaultWage'] as num?) ?? 430), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12, color: AppColors.success)),
+                                Text(_money((staff['defaultWage'] as num?) ?? 430), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12, color: AppColors.success)),
                               ]),
                             ])),
-                            IconButton(tooltip: 'Edit staff', onPressed: () => _editMasterStaff(staff), icon: const Icon(Icons.edit_outlined, size: 20, color: AppColors.primary)),
-                            IconButton(tooltip: 'Delete staff', onPressed: () => _deleteMasterStaff(staff), icon: const Icon(Icons.delete_outline_rounded, size: 20, color: AppColors.danger)),
+                            IconButton(tooltip: 'Edit staff', onPressed: () => _editMasterStaff(staff), icon: Icon(Icons.edit_outlined, size: 20, color: AppColors.primary)),
+                            IconButton(tooltip: 'Delete staff', onPressed: () => _deleteMasterStaff(staff), icon: Icon(Icons.delete_outline_rounded, size: 20, color: AppColors.danger)),
                           ]),
                         ),
                       );
@@ -650,8 +650,8 @@ class _OtherScreenState extends State<OtherScreen> {
   Widget _metricCard(String label, String value, IconData icon, {VoidCallback? onTap}) => Card(
         margin: EdgeInsets.zero,
         elevation: 0,
-        color: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: const BorderSide(color: AppColors.border)),
+        color: Theme.of(context).colorScheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: onTap,
@@ -660,9 +660,9 @@ class _OtherScreenState extends State<OtherScreen> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Icon(icon, color: AppColors.primary, size: 24),
             const SizedBox(height: 12),
-            Text(value, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 22), maxLines: 1, overflow: TextOverflow.ellipsis),
+            Text(value, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 22), maxLines: 1, overflow: TextOverflow.ellipsis),
             const SizedBox(height: 5),
-            Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+            Text(label, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13)),
           ]),
           ),
         ),
@@ -673,18 +673,18 @@ class _OtherScreenState extends State<OtherScreen> {
     showDialog<void>(context: context, builder: (ctx) => AlertDialog(
       title: Text(title),
       content: SizedBox(width: 420, child: sorted.isEmpty
-        ? const Text('No archived events found.')
-        : ListView.separated(shrinkWrap: true, itemCount: sorted.length, separatorBuilder: (_, __) => const Divider(height: 1), itemBuilder: (ctx, i) {
+        ? Text('No archived events found.')
+        : ListView.separated(shrinkWrap: true, itemCount: sorted.length, separatorBuilder: (_, __) => Divider(height: 1), itemBuilder: (ctx, i) {
           final bill = sorted[i];
           return ListTile(
             contentPadding: EdgeInsets.zero,
-            title: Text(bill.auditoriumName.isEmpty ? 'Catering event' : bill.auditoriumName, style: const TextStyle(fontWeight: FontWeight.w700)),
+            title: Text(bill.auditoriumName.isEmpty ? 'Catering event' : bill.auditoriumName, style: TextStyle(fontWeight: FontWeight.w700)),
             subtitle: Text('${DateFormat('dd MMM yyyy').format(bill.date)} · ${bill.staffList.length} staff'),
-            trailing: Text(_money(bill.getAllTotalBill(bill.taMultiplier)), style: const TextStyle(fontWeight: FontWeight.w800)),
+            trailing: Text(_money(bill.getAllTotalBill(bill.taMultiplier)), style: TextStyle(fontWeight: FontWeight.w800)),
             onTap: () { Navigator.pop(ctx); widget.onOpenBill?.call(bill); },
           );
         })),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close'))],
+      actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Close'))],
     ));
   }
 
@@ -693,27 +693,27 @@ class _OtherScreenState extends State<OtherScreen> {
         children: [
           Row(children: [
             const Expanded(child: Text('Total counts', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800))),
-            FilledButton.icon(onPressed: _addMasterItem, icon: const Icon(Icons.add), label: const Text('Add item')),
+            FilledButton.icon(onPressed: _addMasterItem, icon: Icon(Icons.add), label: Text('Add item')),
           ]),
           const SizedBox(height: 8),
           Card(
             elevation: 0,
-            color: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: const BorderSide(color: AppColors.border)),
+            color: Theme.of(context).colorScheme.surface,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
             child: Column(children: [
               if (_inventory.masterItems.isEmpty)
-                const Padding(padding: EdgeInsets.all(16), child: Text('No counts added yet. Tap Add item to create your first item.')),
+                Padding(padding: EdgeInsets.all(16), child: Text('No counts added yet. Tap Add item to create your first item.')),
               ..._inventory.masterItems.asMap().entries.map((entry) {
                 final item = entry.value;
                 return Column(children: [
-                  if (entry.key > 0) const Divider(height: 1, indent: 14, endIndent: 14),
+                  if (entry.key > 0) Divider(height: 1, indent: 14, endIndent: 14),
                   ListTile(
                     dense: true,
-                    title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.w700)),
+                    title: Text(item.name, style: TextStyle(fontWeight: FontWeight.w700)),
                     subtitle: Text('Total quantity: ${item.totalQuantity}'),
                     trailing: Wrap(spacing: 0, children: [
-                      IconButton(tooltip: 'Edit item', onPressed: () => _editMasterItem(item), icon: const Icon(Icons.edit_outlined, size: 20)),
-                      IconButton(tooltip: 'Delete item', onPressed: () => _deleteMasterItem(item), icon: const Icon(Icons.delete_outline, color: AppColors.danger, size: 20)),
+                      IconButton(tooltip: 'Edit item', onPressed: () => _editMasterItem(item), icon: Icon(Icons.edit_outlined, size: 20)),
+                      IconButton(tooltip: 'Delete item', onPressed: () => _deleteMasterItem(item), icon: Icon(Icons.delete_outline, color: AppColors.danger, size: 20)),
                     ]),
                   ),
                 ]);
@@ -723,7 +723,7 @@ class _OtherScreenState extends State<OtherScreen> {
           const SizedBox(height: 18),
           Row(children: [
             const Expanded(child: Text('Counter allocation matrix', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800))),
-            IconButton(onPressed: _addStation, tooltip: 'Add counter', icon: const Icon(Icons.add_box_outlined)),
+            IconButton(onPressed: _addStation, tooltip: 'Add counter', icon: Icon(Icons.add_box_outlined)),
           ]),
           LayoutBuilder(builder: (context, constraints) {
             // Specification calls for a two-column counter matrix on mobile and tablet.
@@ -736,27 +736,27 @@ class _OtherScreenState extends State<OtherScreen> {
                     width: width,
                     child: Card(
                       elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14), side: const BorderSide(color: AppColors.border)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14), side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
                       child: Padding(
                         padding: const EdgeInsets.all(12),
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Row(children: [
-                            Expanded(child: InkWell(onTap: () => _showStationDetails(station), child: Text(station.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)))),
-                            IconButton(tooltip: 'Remove counter', onPressed: () => _deleteStation(station), icon: const Icon(Icons.close, size: 19)),
+                            Expanded(child: InkWell(onTap: () => _showStationDetails(station), child: Text(station.name, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15)))),
+                            IconButton(tooltip: 'Remove counter', onPressed: () => _deleteStation(station), icon: Icon(Icons.close, size: 19)),
                           ]),
-                          const Divider(),
+                          Divider(),
                           ...station.allocations.take(3).map((allocation) => Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 3),
                                 child: Row(children: [
-                                  Expanded(child: Text(allocation.itemName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12))),
-                                  Text('${allocation.quantity}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
-                                  IconButton(constraints: const BoxConstraints.tightFor(width: 30, height: 32), padding: EdgeInsets.zero, tooltip: 'Edit quantity', onPressed: () => _editAllocation(station, allocation), icon: const Icon(Icons.edit_outlined, size: 16)),
+                                  Expanded(child: Text(allocation.itemName, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12))),
+                                  Text('${allocation.quantity}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+                                  IconButton(constraints: const BoxConstraints.tightFor(width: 30, height: 32), padding: EdgeInsets.zero, tooltip: 'Edit quantity', onPressed: () => _editAllocation(station, allocation), icon: Icon(Icons.edit_outlined, size: 16)),
                                   if (allocation.isCustom)
-                                    IconButton(constraints: const BoxConstraints.tightFor(width: 26, height: 32), padding: EdgeInsets.zero, tooltip: 'Remove item', onPressed: () async { setState(() => station.allocations.remove(allocation)); await _saveInventory(); }, icon: const Icon(Icons.close, size: 16)),
+                                    IconButton(constraints: const BoxConstraints.tightFor(width: 26, height: 32), padding: EdgeInsets.zero, tooltip: 'Remove item', onPressed: () async { setState(() => station.allocations.remove(allocation)); await _saveInventory(); }, icon: Icon(Icons.close, size: 16)),
                                 ]),
                               )),
                           if (station.allocations.length > 3) TextButton(onPressed: () => _showStationDetails(station), child: Text('View all ${station.allocations.length} counts')),
-                          Align(alignment: Alignment.centerLeft, child: TextButton.icon(onPressed: () => _addStationItem(station), icon: const Icon(Icons.add, size: 18), label: const Text('Add item'))),
+                          Align(alignment: Alignment.centerLeft, child: TextButton.icon(onPressed: () => _addStationItem(station), icon: Icon(Icons.add, size: 18), label: Text('Add item'))),
                         ]),
                       ),
                     ),
@@ -776,40 +776,40 @@ class _OtherScreenState extends State<OtherScreen> {
         Expanded(child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: emphasize ? AppColors.primary : AppColors.card,
+            color: emphasize ? AppColors.primary : Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: emphasize ? AppColors.primary : AppColors.border),
+            border: Border.all(color: emphasize ? AppColors.primary : Theme.of(context).colorScheme.outlineVariant),
           ),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Icon(icon, size: 19, color: emphasize ? Colors.white70 : AppColors.textSecondary),
+            Icon(icon, size: 19, color: emphasize ? Colors.white70 : Theme.of(context).colorScheme.onSurfaceVariant),
             const SizedBox(height: 8),
             Text(value, maxLines: 1, overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: emphasize ? Colors.white : AppColors.textPrimary)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: emphasize ? Colors.white : Theme.of(context).colorScheme.onSurface)),
             const SizedBox(height: 3),
-            Text(label, style: TextStyle(fontSize: 11, color: emphasize ? Colors.white70 : AppColors.textSecondary)),
+            Text(label, style: TextStyle(fontSize: 11, color: emphasize ? Colors.white70 : Theme.of(context).colorScheme.onSurfaceVariant)),
           ]),
         ));
 
     Widget allowanceGroup(String role, List<StaffAllowance> rows, Color accent) => _sectionCard(
       '$role allowances (${rows.length})', [
-        if (rows.isEmpty) const Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('No staff added yet.', style: TextStyle(color: AppColors.textSecondary))),
+        if (rows.isEmpty) Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('No staff added yet.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant))),
         ...rows.map((row) => Container(
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.all(11),
-          decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(12)),
+          decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest, borderRadius: BorderRadius.circular(12)),
           child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
             Container(width: 4, height: 42, decoration: BoxDecoration(color: accent, borderRadius: BorderRadius.circular(4))),
             const SizedBox(width: 10),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(row.staffName, style: const TextStyle(fontWeight: FontWeight.w800)),
+              Text(row.staffName, style: TextStyle(fontWeight: FontWeight.w800)),
               const SizedBox(height: 3),
-              Text('Base ${_money(row.basePay)}  ·  Extra ${_money(row.amount)}', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-              if (row.auditTag.isNotEmpty) Text(row.auditTag, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+              Text('Base ${_money(row.basePay)}  ·  Extra ${_money(row.amount)}', style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+              if (row.auditTag.isNotEmpty) Text(row.auditTag, style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
             ])),
             const SizedBox(width: 8),
             Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              Text(_money(row.finalTotal), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
-              TextButton(onPressed: () => _assignAllowance(row), style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 8), minimumSize: const Size(0, 30)), child: const Text('Edit extra')),
+              Text(_money(row.finalTotal), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
+              TextButton(onPressed: () => _assignAllowance(row), style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 8), minimumSize: const Size(0, 30)), child: Text('Edit extra')),
             ]),
           ]),
         )),
@@ -822,7 +822,7 @@ class _OtherScreenState extends State<OtherScreen> {
     return ListView(padding: const EdgeInsets.fromLTRB(14, 12, 14, 24), children: [
       Row(children: [
         const Expanded(child: Text('SP & CP', style: TextStyle(fontSize: 21, fontWeight: FontWeight.w900))),
-        IconButton.filledTonal(tooltip: 'Export professional PDF', onPressed: _exportSettlement, icon: const Icon(Icons.picture_as_pdf_outlined)),
+        IconButton.filledTonal(tooltip: 'Export professional PDF', onPressed: _exportSettlement, icon: Icon(Icons.picture_as_pdf_outlined)),
       ]),
       const SizedBox(height: 8),
       InkWell(
@@ -831,15 +831,15 @@ class _OtherScreenState extends State<OtherScreen> {
           final picked = await showDatePicker(context: context, initialDate: _selectedDate, firstDate: DateTime(2000), lastDate: DateTime(2100));
           if (picked != null) await _loadSettlementForDate(picked);
         },
-        child: Container(padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: AppColors.card, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.border)), child: Row(children: [
-          Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.event_outlined)),
+        child: Container(padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(16), border: Border.all(color: Theme.of(context).colorScheme.outlineVariant)), child: Row(children: [
+          Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest, borderRadius: BorderRadius.circular(12)), child: Icon(Icons.event_outlined)),
           const SizedBox(width: 12),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(DateFormat('dd MMM yyyy').format(_selectedDate), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+            Text(DateFormat('dd MMM yyyy').format(_selectedDate), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
             const SizedBox(height: 3),
-            Text(_selectedBill == null ? (settlement.auditoriumName.isEmpty ? 'No archived event for this date' : settlement.auditoriumName) : (_selectedBill!.auditoriumName.isEmpty ? 'Catering event' : _selectedBill!.auditoriumName), style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+            Text(_selectedBill == null ? (settlement.auditoriumName.isEmpty ? 'No archived event for this date' : settlement.auditoriumName) : (_selectedBill!.auditoriumName.isEmpty ? 'Catering event' : _selectedBill!.auditoriumName), style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12)),
           ])),
-          const Icon(Icons.edit_calendar_outlined),
+          Icon(Icons.edit_calendar_outlined),
         ])),
       ),
       const SizedBox(height: 12),
@@ -850,11 +850,11 @@ class _OtherScreenState extends State<OtherScreen> {
       TextFormField(
         key: ValueKey('auditor-${settlement.eventDate}'),
         initialValue: settlement.auditorIdentifier,
-        decoration: const InputDecoration(labelText: 'Auditor identifier (optional)', prefixIcon: Icon(Icons.badge_outlined), border: OutlineInputBorder(), filled: true),
+        decoration: InputDecoration(labelText: 'Auditor identifier (optional)', prefixIcon: Icon(Icons.badge_outlined), border: OutlineInputBorder(), filled: true),
         onChanged: (value) => settlement.auditorIdentifier = value.trim(),
       ),
       const SizedBox(height: 14),
-      Row(children: [const Expanded(child: Text('Staff allowances', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900))), TextButton.icon(onPressed: _addSettlementStaff, icon: const Icon(Icons.person_add_alt_1), label: const Text('Add staff'))]),
+      Row(children: [const Expanded(child: Text('Staff allowances', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900))), TextButton.icon(onPressed: _addSettlementStaff, icon: Icon(Icons.person_add_alt_1), label: Text('Add staff'))]),
       allowanceGroup('SP', spRows, const Color(0xFF2563EB)),
       const SizedBox(height: 10),
       allowanceGroup('CP', cpRows, const Color(0xFFD97706)),
@@ -863,7 +863,7 @@ class _OtherScreenState extends State<OtherScreen> {
         _summaryLine('Other expenses · original', _money(settlement.originalOtherExpenses)),
         _summaryLine('Other expenses · deductions', _money(settlement.otherDeductions)),
         _summaryLine('Other expenses · remaining', _money(settlement.remainingOther), bold: true),
-        const Divider(height: 18),
+        Divider(height: 18),
         _summaryLine('Setting bill · original', _money(settlement.originalSettingBill)),
         _summaryLine('Setting bill · deductions', _money(settlement.settingDeductions)),
         _summaryLine('Setting bill · remaining', _money(settlement.remainingSetting), bold: true),
@@ -872,7 +872,7 @@ class _OtherScreenState extends State<OtherScreen> {
         const SizedBox(height: 12),
         _sectionCard('Other expense details', [
           ...itemized.map((item) => _summaryLine(item['name']?.toString() ?? 'Expense', _money((item['amount'] as num?)?.toDouble() ?? 0))),
-          const Divider(height: 18),
+          Divider(height: 18),
           _summaryLine('Total itemized expenses', _money(itemized.fold<double>(0, (sum, item) => sum + ((item['amount'] as num?)?.toDouble() ?? 0))), bold: true),
         ]),
       ],
@@ -880,15 +880,15 @@ class _OtherScreenState extends State<OtherScreen> {
       SizedBox(height: 50, child: FilledButton.icon(onPressed: () async {
         await StorageService.saveSettlement(settlement);
         if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('SP & CP settlement saved')));
-      }, icon: const Icon(Icons.save_outlined), label: const Text('Save SP & CP settlement'))),
+      }, icon: Icon(Icons.save_outlined), label: Text('Save SP & CP settlement'))),
       const SizedBox(height: 9),
-      SizedBox(height: 48, child: OutlinedButton.icon(onPressed: _exportSettlement, icon: const Icon(Icons.picture_as_pdf_outlined), label: const Text('Export settlement PDF'))),
+      SizedBox(height: 48, child: OutlinedButton.icon(onPressed: _exportSettlement, icon: Icon(Icons.picture_as_pdf_outlined), label: Text('Export settlement PDF'))),
     ]);
   }
 
-  Widget _sectionCard(String title, List<Widget> children) => Card(elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14), side: const BorderSide(color: AppColors.border)), child: Padding(padding: const EdgeInsets.all(14), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)), const SizedBox(height: 8), ...children])));
+  Widget _sectionCard(String title, List<Widget> children) => Card(elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14), side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)), child: Padding(padding: const EdgeInsets.all(14), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15)), const SizedBox(height: 8), ...children])));
 
-  Widget _summaryLine(String label, String value, {bool bold = false}) => Padding(padding: const EdgeInsets.symmetric(vertical: 5), child: Row(children: [Expanded(child: Text(label, style: TextStyle(color: AppColors.textSecondary, fontWeight: bold ? FontWeight.w700 : FontWeight.w400))), Text(value, style: TextStyle(fontWeight: bold ? FontWeight.w800 : FontWeight.w600))]));
+  Widget _summaryLine(String label, String value, {bool bold = false}) => Padding(padding: const EdgeInsets.symmetric(vertical: 5), child: Row(children: [Expanded(child: Text(label, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontWeight: bold ? FontWeight.w700 : FontWeight.w400))), Text(value, style: TextStyle(fontWeight: bold ? FontWeight.w800 : FontWeight.w600))]));
 }
 
 extension _FirstOrNull<T> on Iterable<T> {

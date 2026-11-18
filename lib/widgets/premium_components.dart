@@ -122,7 +122,7 @@ class AnalyticsItem extends StatelessWidget {
             child: Icon(icon, color: accent, size: 19),
           ),
           const SizedBox(height: 9),
-          Text(value, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -.3)),
+          Text(value, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: -.3)),
           Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, fontWeight: FontWeight.w600)),
         ],
       ),

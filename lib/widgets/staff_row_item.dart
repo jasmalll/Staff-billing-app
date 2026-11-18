@@ -72,9 +72,13 @@ class _StaffRowItemState extends State<StaffRowItem> {
     final bool isAbsent = widget.item.attendance != '✅';
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? .10 : .025), blurRadius: 10, offset: const Offset(0, 3))],
       ),
       child: Row(
         children: [
@@ -130,7 +134,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
                         ),
                         child: Text(
                           'Set ₹${widget.item.suggestedWage!.toStringAsFixed(widget.item.suggestedWage! % 1 == 0 ? 0 : 2)}',
-                          style: const TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700, color: Color(0xFF805B00)),
+                          style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700, color: Color(0xFF805B00)),
                         ),
                       ),
                     ),
@@ -155,7 +159,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
                   color: widget.item.attendance == '✅' ? const Color(0xFF4ADE80) : const Color(0xFFFB7185),
                 ),
               ),
-              child: Text(isAbsent ? '🔴' : '✅', style: const TextStyle(fontSize: 13)),
+              child: Text(isAbsent ? '🔴' : '✅', style: TextStyle(fontSize: 13)),
             ),
           ),
           const SizedBox(width: 8),
@@ -177,21 +181,21 @@ class _StaffRowItemState extends State<StaffRowItem> {
                 }
                 widget.onDataChanged();
               },
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.success),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.success),
               decoration: InputDecoration(
                 hintText: 'TA',
-                hintStyle: const TextStyle(fontSize: 10, color: AppColors.textMuted),
+                hintStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.outline),
                 isDense: true,
                 filled: true,
-                fillColor: widget.item.baseTa > 0 ? AppColors.successLight.withOpacity(0.4) : const Color(0xFFF8FAFC),
+                fillColor: widget.item.baseTa > 0 ? (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF123A2D) : AppColors.successLight.withOpacity(0.4)) : Theme.of(context).colorScheme.surfaceContainerHighest,
                 contentPadding: const EdgeInsets.symmetric(vertical: 6),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(6),
-                  borderSide: BorderSide(color: widget.item.baseTa > 0 ? const Color(0xFF86EFAC) : AppColors.border),
+                  borderSide: BorderSide(color: widget.item.baseTa > 0 ? const Color(0xFF86EFAC) : Theme.of(context).colorScheme.outlineVariant),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(6),
-                  borderSide: const BorderSide(color: AppColors.success, width: 1.5),
+                  borderSide: BorderSide(color: AppColors.success, width: 1.5),
                 ),
               ),
             ),
@@ -209,11 +213,11 @@ class _StaffRowItemState extends State<StaffRowItem> {
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: const Color(0xFFCBD5E1)),
+                  border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
                 ),
                 child: Text(
                   '${widget.item.wage.toInt()}',
-                  style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppColors.primary),
+                  style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppColors.primary),
                 ),
               ),
             ),
@@ -235,21 +239,21 @@ class _StaffRowItemState extends State<StaffRowItem> {
                 }
                 widget.onDataChanged();
               },
-              style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppColors.danger),
+              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppColors.danger),
               decoration: InputDecoration(
                 hintText: '−₹',
-                hintStyle: const TextStyle(fontSize: 10, color: AppColors.textMuted),
+                hintStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.outline),
                 isDense: true,
                 filled: true,
-                fillColor: widget.item.minusAmount > 0 ? AppColors.dangerLight.withOpacity(0.4) : const Color(0xFFF8FAFC),
+                fillColor: widget.item.minusAmount > 0 ? (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF4A252C) : AppColors.dangerLight.withOpacity(0.4)) : Theme.of(context).colorScheme.surfaceContainerHighest,
                 contentPadding: const EdgeInsets.symmetric(vertical: 6),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(6),
-                  borderSide: BorderSide(color: widget.item.minusAmount > 0 ? const Color(0xFFFCA5A5) : AppColors.border),
+                  borderSide: BorderSide(color: widget.item.minusAmount > 0 ? const Color(0xFFFCA5A5) : Theme.of(context).colorScheme.outlineVariant),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(6),
-                  borderSide: const BorderSide(color: AppColors.danger, width: 1.5),
+                  borderSide: BorderSide(color: AppColors.danger, width: 1.5),
                 ),
               ),
             ),

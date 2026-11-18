@@ -3,6 +3,7 @@ import '../constants/app_colors.dart';
 import '../models/staff_item.dart';
 import '../widgets/staff_row_item.dart';
 import '../services/storage_service.dart';
+import '../services/theme_service.dart';
 
 class ReportingScreen extends StatefulWidget {
   final List<StaffItem> boysList;
@@ -135,20 +136,20 @@ class _ReportingScreenState extends State<ReportingScreen> {
     final staff = await StorageService.getMasterStaffDirectory();
     if (!mounted) return;
     showDialog<void>(context: context, builder: (ctx) => AlertDialog(
-      title: const Text('Manpower directory'),
+      title: Text('Manpower directory'),
       content: SizedBox(width: 380, child: staff.isEmpty
-        ? const Text('No saved manpower yet. Add staff in Other → Overview → Manpower.')
-        : ListView.separated(shrinkWrap: true, itemCount: staff.length, separatorBuilder: (_, __) => const Divider(height: 1), itemBuilder: (ctx, i) {
+        ? Text('No saved manpower yet. Add staff in Other → Overview → Manpower.')
+        : ListView.separated(shrinkWrap: true, itemCount: staff.length, separatorBuilder: (_, __) => Divider(height: 1), itemBuilder: (ctx, i) {
           final row = staff[i];
           return ListTile(
             contentPadding: EdgeInsets.zero,
-            title: Text(row['name']?.toString() ?? '', style: const TextStyle(fontWeight: FontWeight.w700)),
+            title: Text(row['name']?.toString() ?? '', style: TextStyle(fontWeight: FontWeight.w700)),
             subtitle: Text('${row['category'] ?? 'BOY'} · ${row['phone'] ?? ''}'),
-            trailing: Text('₹${((row['defaultWage'] as num?) ?? 430).toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.w800)),
+            trailing: Text('₹${((row['defaultWage'] as num?) ?? 430).toStringAsFixed(0)}', style: TextStyle(fontWeight: FontWeight.w800)),
           );
         })),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
+        TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Close')),
         ElevatedButton(
           onPressed: () {
             var updated = 0;
@@ -170,7 +171,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
               ));
             }
           },
-          child: const Text('Done'),
+          child: Text('Done'),
         ),
       ],
     ));
@@ -181,25 +182,25 @@ class _ReportingScreenState extends State<ReportingScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(ctx).colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Paste WhatsApp List', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+        title: Text('Paste WhatsApp List', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
         content: TextField(
           controller: ctrl,
           maxLines: 9,
-          style: const TextStyle(fontSize: 13, height: 1.4),
+          style: TextStyle(fontSize: 13, height: 1.4),
           decoration: InputDecoration(
             hintText: 'Paste staff list from WhatsApp here...',
-            hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+            hintStyle: TextStyle(color: Theme.of(context).colorScheme.outline, fontSize: 13),
             filled: true,
-            fillColor: AppColors.background,
+            fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -212,7 +213,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
               }
               Navigator.pop(ctx);
             },
-            child: const Text('Load List', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('Load List', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -225,11 +226,11 @@ class _ReportingScreenState extends State<ReportingScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(ctx).colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
           'Add Extra ${role == 'boy' ? 'Boy' : (role == 'sp' ? 'SP' : 'CP')}',
-          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -239,7 +240,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
               decoration: InputDecoration(
                 labelText: 'Name',
                 filled: true,
-                fillColor: AppColors.background,
+                fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
               ),
             ),
@@ -250,7 +251,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
               decoration: InputDecoration(
                 labelText: 'Phone (optional)',
                 filled: true,
-                fillColor: AppColors.background,
+                fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
               ),
             ),
@@ -259,7 +260,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -300,7 +301,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
               }
               Navigator.pop(ctx);
             },
-            child: const Text('Add Staff', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('Add Staff', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -313,9 +314,9 @@ class _ReportingScreenState extends State<ReportingScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(ctx).colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('Edit #${item.index} Details', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+        title: Text('Edit #${item.index} Details', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -324,7 +325,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
               decoration: InputDecoration(
                 labelText: 'Name',
                 filled: true,
-                fillColor: AppColors.background,
+                fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
               ),
             ),
@@ -335,7 +336,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
               decoration: InputDecoration(
                 labelText: 'Phone',
                 filled: true,
-                fillColor: AppColors.background,
+                fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
               ),
             ),
@@ -344,7 +345,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -361,7 +362,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
               }
               Navigator.pop(ctx);
             },
-            child: const Text('Save', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('Save', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -374,16 +375,16 @@ class _ReportingScreenState extends State<ReportingScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(ctx).colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('Wage for #${item.index} ${item.name}', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+        title: Text('Wage for #${item.index} ${item.name}', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Quick Select:',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 8),
             // 3 Quick Options: 440, 450, 460
@@ -405,10 +406,10 @@ class _ReportingScreenState extends State<ReportingScreen> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         decoration: BoxDecoration(
-                          color: isSelected ? AppColors.primary : const Color(0xFFF1F5F9),
+                          color: isSelected ? AppColors.primary : Theme.of(context).colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: isSelected ? AppColors.primary : const Color(0xFFCBD5E1),
+                            color: isSelected ? AppColors.primary : Theme.of(context).colorScheme.outlineVariant,
                             width: 1.2,
                           ),
                         ),
@@ -428,9 +429,9 @@ class _ReportingScreenState extends State<ReportingScreen> {
               }).toList(),
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Or Custom Wage:',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 6),
             TextField(
@@ -440,7 +441,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
                 hintText: 'Enter wage amount',
                 prefixText: '₹ ',
                 filled: true,
-                fillColor: AppColors.background,
+                fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
               ),
             ),
@@ -449,7 +450,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -466,7 +467,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
               }
               Navigator.pop(ctx);
             },
-            child: const Text('Update', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('Update', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -477,17 +478,17 @@ class _ReportingScreenState extends State<ReportingScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(ctx).colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Start New Work?', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
-        content: const Text(
+        title: Text('Start New Work?', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+        content: Text(
           'Existing bills are securely archived in the Calendar. Ready to start a fresh staff roster?',
-          style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+          style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -498,7 +499,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
               Navigator.pop(ctx);
               widget.onStartNewWork();
             },
-            child: const Text('Start Fresh', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('Start Fresh', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -521,7 +522,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Reporting',
               style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: Colors.white),
             ),
@@ -539,13 +540,18 @@ class _ReportingScreenState extends State<ReportingScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.groups_2_outlined, color: Colors.white, size: 21),
+            tooltip: Theme.of(context).brightness == Brightness.dark ? 'Switch to light mode' : 'Switch to dark mode',
+            onPressed: () => ThemeService.setMode(Theme.of(context).brightness == Brightness.dark ? ThemeMode.light : ThemeMode.dark),
+            icon: Icon(Theme.of(context).brightness == Brightness.dark ? Icons.light_mode_rounded : Icons.dark_mode_rounded, color: Colors.white, size: 20),
+          ),
+          IconButton(
+            icon: Icon(Icons.groups_2_outlined, color: Colors.white, size: 21),
             tooltip: 'Manpower directory and saved wages',
             onPressed: _showManpowerDirectory,
           ),
           if (hasData)
             IconButton(
-              icon: const Icon(Icons.refresh_rounded, color: Colors.white70, size: 20),
+              icon: Icon(Icons.refresh_rounded, color: Colors.white70, size: 20),
               tooltip: 'New Work',
               onPressed: _confirmNewWorkDialog,
             ),
@@ -559,13 +565,13 @@ class _ReportingScreenState extends State<ReportingScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
-                  side: const BorderSide(color: Color(0xFF334155)),
+                  side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
                 ),
               ),
-              icon: const Icon(Icons.paste_rounded, size: 15),
+              icon: Icon(Icons.paste_rounded, size: 15),
               label: Text(
                 hasData ? 'New List' : 'Add List',
-                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
               ),
               onPressed: _showAddListDialog,
             ),
@@ -583,25 +589,25 @@ class _ReportingScreenState extends State<ReportingScreen> {
                       Container(
                         padding: const EdgeInsets.all(22),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.surface,
                           shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.border),
+                          border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
                           boxShadow: [
                             BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
                           ],
                         ),
-                        child: const Icon(Icons.groups_rounded, size: 48, color: AppColors.primary),
+                        child: Icon(Icons.groups_rounded, size: 48, color: AppColors.primary),
                       ),
                       const SizedBox(height: 18),
-                      const Text(
+                      Text(
                         'No Staff Roster Loaded',
-                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface),
                       ),
                       const SizedBox(height: 6),
-                      const Text(
+                      Text(
                         'Paste your staff list directly from WhatsApp to get started with attendance and calculations.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 13, color: AppColors.textSecondary, height: 1.4),
+                        style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.4),
                       ),
                       const SizedBox(height: 22),
                       ElevatedButton.icon(
@@ -611,8 +617,8 @@ class _ReportingScreenState extends State<ReportingScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 13),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         ),
-                        icon: const Icon(Icons.paste_rounded, color: Colors.white, size: 17),
-                        label: const Text(
+                        icon: Icon(Icons.paste_rounded, color: Colors.white, size: 17),
+                        label: Text(
                           'Add WhatsApp Staff List',
                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 13.5),
                         ),
@@ -658,13 +664,13 @@ class _ReportingScreenState extends State<ReportingScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
                     color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                    child: const Row(
+                    child: Row(
                       children: [
                         Expanded(
                           flex: 3,
                           child: Text(
                             'STAFF NAME & PHONE',
-                            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 10, color: AppColors.textSecondary, letterSpacing: 0.3),
+                            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 10, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 0.3),
                           ),
                         ),
                         SizedBox(
@@ -672,7 +678,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
                           child: Center(
                             child: Text(
                               'ATT',
-                              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 10, color: AppColors.textSecondary),
+                              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 10, color: Theme.of(context).colorScheme.onSurfaceVariant),
                             ),
                           ),
                         ),
@@ -721,8 +727,8 @@ class _ReportingScreenState extends State<ReportingScreen> {
                             alignment: Alignment.centerLeft,
                             child: TextButton.icon(
                               onPressed: () => _showAddExtraStaffDialog('boy'),
-                              icon: const Icon(Icons.add_rounded, size: 16, color: AppColors.primary),
-                              label: const Text(
+                              icon: Icon(Icons.add_rounded, size: 16, color: AppColors.primary),
+                              label: Text(
                                 '+ Add Extra Boy',
                                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.primary),
                               ),
@@ -737,8 +743,8 @@ class _ReportingScreenState extends State<ReportingScreen> {
                             alignment: Alignment.centerLeft,
                             child: TextButton.icon(
                               onPressed: () => _showAddExtraStaffDialog('sp'),
-                              icon: const Icon(Icons.add_rounded, size: 16, color: AppColors.roleSp),
-                              label: const Text(
+                              icon: Icon(Icons.add_rounded, size: 16, color: AppColors.roleSp),
+                              label: Text(
                                 '+ Add Extra SP',
                                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.roleSp),
                               ),
@@ -753,8 +759,8 @@ class _ReportingScreenState extends State<ReportingScreen> {
                             alignment: Alignment.centerLeft,
                             child: TextButton.icon(
                               onPressed: () => _showAddExtraStaffDialog('cp'),
-                              icon: const Icon(Icons.add_rounded, size: 16, color: AppColors.roleCp),
-                              label: const Text(
+                              icon: Icon(Icons.add_rounded, size: 16, color: AppColors.roleCp),
+                              label: Text(
                                 '+ Add Extra CP',
                                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.roleCp),
                               ),
@@ -769,8 +775,8 @@ class _ReportingScreenState extends State<ReportingScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: const Border(top: BorderSide(color: AppColors.border)),
+                      color: Theme.of(context).colorScheme.surface,
+                      border: Border(top: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.04),
@@ -788,8 +794,8 @@ class _ReportingScreenState extends State<ReportingScreen> {
                           elevation: 0,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         ),
-                        icon: const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 18),
-                        label: const Text(
+                        icon: Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 18),
+                        label: Text(
                           'Proceed to Outing Billing',
                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14),
                         ),
@@ -819,7 +825,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
           if (subtitle != null)
             Text(
               subtitle,
-              style: const TextStyle(fontSize: 10.5, color: AppColors.textMuted),
+              style: TextStyle(fontSize: 10.5, color: Theme.of(context).colorScheme.outline),
             ),
         ],
       ),

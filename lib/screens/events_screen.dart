@@ -51,7 +51,7 @@ class _EventsScreenState extends State<EventsScreen> {
     await showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Event Summary'),
+        title: Text('Event Summary'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -81,7 +81,7 @@ class _EventsScreenState extends State<EventsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Close'),
+            child: Text('Close'),
           ),
         ],
       ),
@@ -112,13 +112,13 @@ class _EventsScreenState extends State<EventsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
+                    Text(title, style: TextStyle(fontWeight: FontWeight.w800)),
                     const SizedBox(height: 3),
                     Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded),
+              Icon(Icons.chevron_right_rounded),
             ],
           ),
         ),
@@ -179,19 +179,19 @@ class _EventsScreenState extends State<EventsScreen> {
         content: SingleChildScrollView(
           child: SelectableText(
             content,
-            style: const TextStyle(height: 1.55, fontSize: 14, fontWeight: FontWeight.w600),
+            style: TextStyle(height: 1.55, fontSize: 14, fontWeight: FontWeight.w600),
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Close')),
+          TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text('Close')),
           FilledButton.icon(
             onPressed: () async {
               await Clipboard.setData(ClipboardData(text: content));
               if (dialogContext.mounted) Navigator.pop(dialogContext);
               if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(successMessage)));
             },
-            icon: const Icon(Icons.copy_rounded, size: 17),
-            label: const Text('Copy'),
+            icon: Icon(Icons.copy_rounded, size: 17),
+            label: Text('Copy'),
           ),
         ],
       ),
@@ -210,14 +210,14 @@ class _EventsScreenState extends State<EventsScreen> {
           title: Text(existing == null ? 'Create Event' : 'Edit Event'),
           content: SingleChildScrollView(
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              TextField(controller: name, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Event Name', hintText: 'Wedding')),
+              TextField(controller: name, textCapitalization: TextCapitalization.words, decoration: InputDecoration(labelText: 'Event Name', hintText: 'Wedding')),
               const SizedBox(height: 12),
-              TextField(controller: site, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Site', hintText: 'Auditorium name')),
+              TextField(controller: site, textCapitalization: TextCapitalization.words, decoration: InputDecoration(labelText: 'Site', hintText: 'Auditorium name')),
               const SizedBox(height: 12),
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.calendar_month_rounded),
-                title: const Text('Date'),
+                leading: Icon(Icons.calendar_month_rounded),
+                title: Text('Date'),
                 subtitle: Text(_date(selectedDate)),
                 onTap: () async {
                   final picked = await showDatePicker(
@@ -230,14 +230,14 @@ class _EventsScreenState extends State<EventsScreen> {
                 },
               ),
               const SizedBox(height: 8),
-              TextField(controller: hosting, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Hosting Count', hintText: '0')),
+              TextField(controller: hosting, keyboardType: TextInputType.number, decoration: InputDecoration(labelText: 'Hosting Count', hintText: '0')),
               const SizedBox(height: 6),
               Text('Boys, SP and CP counts are taken automatically from the saved bill.', style: Theme.of(context).textTheme.bodySmall),
             ]),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancel')),
-            FilledButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('Save Event')),
+            TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: Text('Cancel')),
+            FilledButton(onPressed: () => Navigator.pop(dialogContext, true), child: Text('Save Event')),
           ],
         ),
       ),
@@ -277,11 +277,11 @@ class _EventsScreenState extends State<EventsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Event?'),
+        title: Text('Delete Event?'),
         content: Text('Delete "${event.eventName.isEmpty ? event.auditoriumName : event.eventName}" and its linked bill?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text('Cancel')),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: Text('Delete')),
         ],
       ),
     );
@@ -311,7 +311,7 @@ class _EventsScreenState extends State<EventsScreen> {
                     event.auditoriumName.isEmpty ? 'Site not set' : event.auditoriumName,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, height: 1.2),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, height: 1.2),
                   ),
                 ),
                 PopupMenuButton<String>(
@@ -360,7 +360,7 @@ class _EventsScreenState extends State<EventsScreen> {
             children: [
               Icon(Icons.event_note_rounded, size: 58, color: Theme.of(context).colorScheme.primary),
               const SizedBox(height: 12),
-              const Text('No events yet', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+              Text('No events yet', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
               const SizedBox(height: 5),
               Text('Create an event to track staff counts and total TA.', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium),
             ],
@@ -387,11 +387,11 @@ class _EventsScreenState extends State<EventsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Event List')),
+      appBar: AppBar(title: Text('Event List')),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showEventEditor(),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('Add Event'),
+        icon: Icon(Icons.add_rounded),
+        label: Text('Add Event'),
       ),
       body: _buildEventList(),
     );
