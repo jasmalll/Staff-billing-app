@@ -243,7 +243,7 @@ class _OutingScreenState extends State<OutingScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 13.5,
-                            color: isSelected ? Colors.white : AppColors.primary,
+                            color: isSelected ? Colors.white : AppColors.primaryText(context),
                           ),
                         ),
                       ),
@@ -391,7 +391,7 @@ class _OutingScreenState extends State<OutingScreen> {
               const SizedBox(height: 14),
               ListTile(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
-                leading: const CircleAvatar(backgroundColor: Color(0xFFE8F7EE), child: Icon(Icons.people_alt_outlined, color: AppColors.success)),
+                leading: CircleAvatar(backgroundColor: const Color(0xFFE8F7EE), child: Icon(Icons.people_alt_outlined, color: AppColors.successText(context))),
                 title: Text('Name Only', style: TextStyle(fontWeight: FontWeight.w700)),
                 subtitle: Text('Number, name, phone and group GPay number'),
                 onTap: () => Navigator.pop(ctx, 'names'),
@@ -399,7 +399,7 @@ class _OutingScreenState extends State<OutingScreen> {
               const SizedBox(height: 8),
               ListTile(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
-                leading: const CircleAvatar(backgroundColor: Color(0xFFEFF4FF), child: Icon(Icons.receipt_long_outlined, color: AppColors.primary)),
+                leading: CircleAvatar(backgroundColor: const Color(0xFFEFF4FF), child: Icon(Icons.receipt_long_outlined, color: AppColors.primaryText(context))),
                 title: Text('Name and Wage', style: TextStyle(fontWeight: FontWeight.w700)),
                 subtitle: Text('Existing full billing WhatsApp format'),
                 onTap: () => Navigator.pop(ctx, 'billing'),
@@ -861,7 +861,7 @@ class _OutingScreenState extends State<OutingScreen> {
                                   visualDensity: VisualDensity.compact,
                                   constraints: const BoxConstraints.tightFor(width: 28, height: 28),
                                   onPressed: () => _deleteOtherExpense(entry.key),
-                                  icon: Icon(Icons.delete_outline, size: 15, color: AppColors.danger),
+                                  icon: Icon(Icons.delete_outline, size: 15, color: AppColors.dangerText(context)),
                                 ),
                               ],
                             ),
@@ -897,7 +897,7 @@ class _OutingScreenState extends State<OutingScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
                             decoration: BoxDecoration(
                               color: AppColors.primary,
                               borderRadius: BorderRadius.vertical(top: Radius.circular(11)),
@@ -949,8 +949,8 @@ class _OutingScreenState extends State<OutingScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text('Total TA: ${bTa.toInt()}', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.success)),
-                                    Text('Group Total: ${bBill.toInt()}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primary)),
+                                    Text('Total TA: ${bTa.toInt()}', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.successText(context))),
+                                    Text('Group Total: ${bBill.toInt()}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primaryText(context))),
                                   ],
                                 ),
                                 const SizedBox(height: 8),
@@ -969,10 +969,10 @@ class _OutingScreenState extends State<OutingScreen> {
                                     isDense: true,
                                     filled: true,
                                     fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-                                    prefixIcon: Icon(Icons.account_balance_wallet_outlined, size: 16, color: AppColors.primary),
+                                    prefixIcon: Icon(Icons.account_balance_wallet_outlined, size: 16, color: AppColors.primaryText(context)),
                                     contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                     enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
-                                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.primary)),
+                                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.primaryText(context))),
                                   ),
                                 ),
                               ],
@@ -1012,8 +1012,8 @@ class _OutingScreenState extends State<OutingScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('ALL TA: ${grandTotalTa.toInt()}', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppColors.success)),
-                      Text('ALL TOTAL: ${grandTotalBill.toInt()}', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: AppColors.primary)),
+                      Text('ALL TA: ${grandTotalTa.toInt()}', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppColors.successText(context))),
+                      Text('ALL TOTAL: ${grandTotalBill.toInt()}', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: AppColors.primaryText(context))),
                     ],
                   ),
                   const Spacer(),
@@ -1073,8 +1073,8 @@ class _OutingScreenState extends State<OutingScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Total TA: ${totalTa.toInt()}', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.success)),
-                Text('Total Bill: ${totalBill.toInt()}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primary)),
+                Text('Total TA: ${totalTa.toInt()}', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.successText(context))),
+                Text('Total Bill: ${totalBill.toInt()}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primaryText(context))),
               ],
             ),
           ),

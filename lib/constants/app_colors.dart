@@ -23,4 +23,15 @@ class AppColors {
   static const Color roleSpLight = Color(0xFFEAF1FC);
   static const Color roleCp = Color(0xFFC58A32);
   static const Color roleCpLight = Color(0xFFFBF1DE);
+
+  // High-contrast foregrounds for dark surfaces. Keep the original light palette.
+  static Color primaryText(BuildContext context) => Theme.of(context).brightness == Brightness.dark
+      ? const Color(0xFF72DCEB)
+      : primary;
+  static Color successText(BuildContext context) => Theme.of(context).brightness == Brightness.dark
+      ? const Color(0xFF55E6B5)
+      : success;
+  static Color dangerText(BuildContext context) => Theme.of(context).brightness == Brightness.dark
+      ? const Color(0xFFFF737D)
+      : danger;
 }

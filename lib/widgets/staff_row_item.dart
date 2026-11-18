@@ -72,8 +72,8 @@ class _StaffRowItemState extends State<StaffRowItem> {
     final bool isAbsent = widget.item.attendance != '✅';
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
+      margin: const EdgeInsets.only(bottom: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(15),
@@ -97,7 +97,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
                           '${widget.item.index}. ${widget.item.name}',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            fontSize: 12.5,
+                            fontSize: 11.5,
                             color: isAbsent ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.onSurface,
                             decoration: isAbsent ? TextDecoration.lineThrough : TextDecoration.none,
                           ),
@@ -112,7 +112,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
                   if (widget.item.phone.isNotEmpty)
                     Text(
                       widget.item.phone,
-                      style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
+                      style: TextStyle(fontSize: 9, color: Colors.grey.shade500),
                     ),
                   if (widget.item.suggestedWage != null)
                     InkWell(
@@ -147,8 +147,8 @@ class _StaffRowItemState extends State<StaffRowItem> {
           GestureDetector(
             onTap: _cycleAttendance,
             child: Container(
-              width: 34,
-              height: 32,
+              width: 32,
+              height: 28,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: widget.item.attendance == '✅'
@@ -167,7 +167,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
           // TA Input
           SizedBox(
             width: 48,
-            height: 32,
+            height: 28,
             child: TextField(
               controller: _taCtrl,
               keyboardType: TextInputType.number,
@@ -181,7 +181,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
                 }
                 widget.onDataChanged();
               },
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.success),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.successText(context)),
               decoration: InputDecoration(
                 hintText: 'TA',
                 hintStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.outline),
@@ -195,7 +195,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(6),
-                  borderSide: BorderSide(color: AppColors.success, width: 1.5),
+                  borderSide: BorderSide(color: AppColors.successText(context), width: 1.5),
                 ),
               ),
             ),
@@ -205,7 +205,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
           // Wage Button
           SizedBox(
             width: 48,
-            height: 32,
+            height: 28,
             child: InkWell(
               onTap: widget.onEditWage,
               child: Container(
@@ -217,7 +217,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
                 ),
                 child: Text(
                   '${widget.item.wage.toInt()}',
-                  style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppColors.primary),
+                  style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppColors.primaryText(context)),
                 ),
               ),
             ),
@@ -227,7 +227,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
           // Deduction / Minus Input
           SizedBox(
             width: 52,
-            height: 32,
+            height: 28,
             child: TextField(
               controller: _minusCtrl,
               keyboardType: TextInputType.number,
@@ -239,7 +239,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
                 }
                 widget.onDataChanged();
               },
-              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppColors.danger),
+              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppColors.dangerText(context)),
               decoration: InputDecoration(
                 hintText: '−₹',
                 hintStyle: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.outline),
@@ -253,7 +253,7 @@ class _StaffRowItemState extends State<StaffRowItem> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(6),
-                  borderSide: BorderSide(color: AppColors.danger, width: 1.5),
+                  borderSide: BorderSide(color: AppColors.dangerText(context), width: 1.5),
                 ),
               ),
             ),

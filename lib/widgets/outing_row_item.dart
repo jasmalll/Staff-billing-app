@@ -32,8 +32,8 @@ class OutingRowItem extends StatelessWidget {
     final dark = Theme.of(context).brightness == Brightness.dark;
     if (!item.isPresent) {
       return Container(
-        margin: const EdgeInsets.only(bottom: 6),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+        margin: const EdgeInsets.only(bottom: 3),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
           color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF351F25) : AppColors.dangerLight.withOpacity(.45),
           borderRadius: BorderRadius.circular(13),
@@ -46,7 +46,7 @@ class OutingRowItem extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(color: dark ? const Color(0xFF4A252C) : AppColors.dangerLight, borderRadius: BorderRadius.circular(4)),
-              child: Text('🔴 Absent', style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.w700, fontSize: 11)),
+              child: Text('🔴 Absent', style: TextStyle(color: AppColors.dangerText(context), fontWeight: FontWeight.w700, fontSize: 11)),
             ),
           ],
         ),
@@ -57,8 +57,8 @@ class OutingRowItem extends StatelessWidget {
     double total = item.getTotal(multiplier);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
+      margin: const EdgeInsets.only(bottom: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(13),
@@ -74,13 +74,13 @@ class OutingRowItem extends StatelessWidget {
               children: [
                 Text(
                   '${item.index}. ${item.name}',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5, color: Theme.of(context).colorScheme.onSurface),
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 11.5, color: Theme.of(context).colorScheme.onSurface),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (item.phone.isNotEmpty)
-                  Text(item.phone, style: TextStyle(fontSize: 9.5, color: Theme.of(context).colorScheme.onSurfaceVariant)),
-                const SizedBox(height: 2),
+                  Text(item.phone, style: TextStyle(fontSize: 9, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                const SizedBox(height: 1),
 
                 // Calculation Breakdown Equation
                 Wrap(
@@ -97,7 +97,7 @@ class OutingRowItem extends StatelessWidget {
                         ),
                         child: Text(
                           '₹${item.wage.toInt()}',
-                          style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: AppColors.primary),
+                          style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700, color: AppColors.primaryText(context)),
                         ),
                       ),
                     ),
@@ -106,7 +106,7 @@ class OutingRowItem extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 4),
                         child: Text(
                           '− ₹${item.minusAmount.toInt()}',
-                          style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: AppColors.danger),
+                          style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700, color: AppColors.dangerText(context)),
                         ),
                       ),
                     Padding(
@@ -123,7 +123,7 @@ class OutingRowItem extends StatelessWidget {
                           ),
                           child: Text(
                             '+ ₹${autoTa.toInt()} TA ✎',
-                            style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: AppColors.success),
+                            style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700, color: AppColors.successText(context)),
                           ),
                         ),
                       ),
@@ -139,7 +139,7 @@ class OutingRowItem extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8),
             child: Text(
               '= ₹${total.toInt()}',
-              style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w900, color: AppColors.primary),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: AppColors.primaryText(context)),
             ),
           ),
 
@@ -147,8 +147,8 @@ class OutingRowItem extends StatelessWidget {
           GestureDetector(
             onTap: _cycleOutingStatus,
             child: Container(
-              width: 32,
-              height: 30,
+              width: 30,
+              height: 27,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: item.outingStatus == '✅'

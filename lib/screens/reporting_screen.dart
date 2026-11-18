@@ -419,7 +419,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 13.5,
-                            color: isSelected ? Colors.white : AppColors.primary,
+                            color: isSelected ? Colors.white : AppColors.primaryText(context),
                           ),
                         ),
                       ),
@@ -596,7 +596,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
                             BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
                           ],
                         ),
-                        child: Icon(Icons.groups_rounded, size: 48, color: AppColors.primary),
+                        child: Icon(Icons.groups_rounded, size: 48, color: AppColors.primaryText(context)),
                       ),
                       const SizedBox(height: 18),
                       Text(
@@ -688,7 +688,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
                           child: Center(
                             child: Text(
                               'TA (₹)',
-                              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: AppColors.success),
+                              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: AppColors.successText(context)),
                             ),
                           ),
                         ),
@@ -698,7 +698,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
                           child: Center(
                             child: Text(
                               'WAGE',
-                              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: AppColors.primary),
+                              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: AppColors.primaryText(context)),
                             ),
                           ),
                         ),
@@ -708,7 +708,7 @@ class _ReportingScreenState extends State<ReportingScreen> {
                           child: Center(
                             child: Text(
                               'DEDUCT',
-                              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: AppColors.danger),
+                              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 10, color: AppColors.dangerText(context)),
                             ),
                           ),
                         ),
@@ -721,16 +721,16 @@ class _ReportingScreenState extends State<ReportingScreen> {
                       padding: const EdgeInsets.all(12),
                       children: [
                         if (widget.boysList.isNotEmpty) ...[
-                          _buildSectionHeader('BOYS (${widget.boysList.length})', AppColors.primary, 'Tap name to edit details'),
+                          _buildSectionHeader('BOYS (${widget.boysList.length})', AppColors.primaryText(context), 'Tap name to edit details'),
                           _buildStaffCard(widget.boysList),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: TextButton.icon(
                               onPressed: () => _showAddExtraStaffDialog('boy'),
-                              icon: Icon(Icons.add_rounded, size: 16, color: AppColors.primary),
+                              icon: Icon(Icons.add_rounded, size: 16, color: AppColors.primaryText(context)),
                               label: Text(
                                 '+ Add Extra Boy',
-                                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.primary),
+                                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.primaryText(context)),
                               ),
                             ),
                           ),
