@@ -169,6 +169,7 @@ class _EventsScreenState extends State<EventsScreen> {
     return result;
   }
 
+
   Future<void> _showSpCpWageBreakdown(CateringBill event) async {
     final staff = [...event.spList, ...event.cpList];
     if (staff.isEmpty) {
@@ -184,143 +185,486 @@ class _EventsScreenState extends State<EventsScreen> {
       final saved = event.spCpWageBreakdown.where((e) => e['staffKey'] == key).firstOrNull;
       rows[key] = saved == null
           ? {'staffKey': key, 'staffName': person.name, 'expenses': <Map<String, dynamic>>[], 'settingBillAmount': 0.0}
-          : {...saved, 'expenses': (saved['expenses'] as List<dynamic>? ?? []).whereType<Map>().map((e) => Map<String, dynamic>.from(e)).toList(), 'settingBillAmount': saved['settingBillSelected'] == true ? ((saved['settingBillAmount'] as num?)?.toDouble() ?? 0.0) : ((saved.containsKey('settingBillSelected')) ? 0.0 : ((saved['settingBillAmount'] as num?)?.toDouble() ?? 0.0))};
+          : {
+              ...saved,
+              'expenses': (saved['expenses'] as List<dynamic>? ?? [])
+                  .whereType<Map>()
+                  .map((e) => Map<String, dynamic>.from(e))
+                  .toList(),
+              'settingBillAmount': saved['settingBillSelected'] == true
+                  ? ((saved['settingBillAmount'] as num?)?.toDouble() ?? 0.0)
+                  : ((saved.containsKey('settingBillSelected'))
+                      ? 0.0
+                      : ((saved['settingBillAmount'] as num?)?.toDouble() ?? 0.0)),
+            };
     }
+
+    const background = Color(0xFF080B0A);
+    const surface = Color(0xFF111614);
+    const surfaceSoft = Color(0xFF171D1B);
+    const mint = Color(0xFF70E7C0);
+    const muted = Color(0xFFADB8B4);
+    const border = Color(0xFF303A36);
 
     await showDialog<void>(
       context: context,
+      barrierDismissible: false,
       builder: (dialogContext) => StatefulBuilder(
         builder: (ctx, setDialogState) {
-          double settingAssigned() => rows.values.fold<double>(0, (sum, row) => sum + ((row['settingBillAmount'] as num?)?.toDouble() ?? 0));
+          double settingAssigned() => rows.values.fold<double>(
+                0,
+                (sum, row) => sum + ((row['settingBillAmount'] as num?)?.toDouble() ?? 0),
+              );
           double settingRemaining() => event.settingExpenses - settingAssigned();
           Set<String> assignedExpenseNames({String? exceptKey}) => rows.entries
               .where((entry) => entry.key != exceptKey)
-              .expand((entry) => (entry.value['expenses'] as List).map((e) => e['name'].toString())).toSet();
+              .expand((entry) => (entry.value['expenses'] as List).map((e) => e['name'].toString()))
+              .toSet();
           double rowTotal(StaffItem person) {
             final row = rows[_staffBreakdownKey(person)]!;
-            final extras = (row['expenses'] as List).fold<double>(0, (sum, item) => sum + ((item['amount'] as num?)?.toDouble() ?? 0));
+            final extras = (row['expenses'] as List).fold<double>(
+              0,
+              (sum, item) => sum + ((item['amount'] as num?)?.toDouble() ?? 0),
+            );
             final setting = (row['settingBillAmount'] as num?)?.toDouble() ?? 0;
             return person.getEffectiveWage() + person.getCalculatedTa(event.taMultiplier) + extras + setting;
           }
+
           final grandTotal = staff.fold<double>(0, (sum, person) => sum + rowTotal(person));
-          return AlertDialog(
-            insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-            title: const Text('SP / CP Wage Breakdown', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
-            content: SizedBox(
-              width: double.maxFinite,
-              child: SingleChildScrollView(
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  ...staff.map((person) {
-                    final key = _staffBreakdownKey(person);
-                    final row = rows[key]!;
-                    final expenses = row['expenses'] as List<Map<String, dynamic>>;
-                    final wageTa = person.getEffectiveWage() + person.getCalculatedTa(event.taMultiplier);
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 6),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Row(children: [
-                            Expanded(child: Text(person.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13))),
-                            Text(_money(wageTa), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
-                          ]),
-                          Text('Wage ${_money(person.getEffectiveWage())} + TA ${_money(person.getCalculatedTa(event.taMultiplier))}', style: Theme.of(ctx).textTheme.bodySmall),
-                          if (expenses.isNotEmpty) Wrap(spacing: 4, runSpacing: 0, children: expenses.map((expense) => InputChip(
-                            visualDensity: VisualDensity.compact,
-                            label: Text('${expense['name']} ${_money((expense['amount'] as num?)?.toDouble() ?? 0)}'),
-                            onPressed: () async {
-                              final amount = await _editBreakdownAmount((expense['amount'] as num?)?.toDouble() ?? 0, '${expense['name']} · ${person.name}');
-                              if (amount != null) setDialogState(() => expense['amount'] = amount);
-                            },
-                            onDeleted: () => setDialogState(() => expenses.remove(expense)),
-                          )).toList()),
-                          Wrap(
-                            alignment: WrapAlignment.spaceBetween,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            spacing: 8,
-                            runSpacing: 4,
+          final screenHeight = MediaQuery.of(ctx).size.height;
+
+          Widget staffCard(StaffItem person) {
+            final key = _staffBreakdownKey(person);
+            final row = rows[key]!;
+            final expenses = row['expenses'] as List<Map<String, dynamic>>;
+            final wage = person.getEffectiveWage();
+            final ta = person.getCalculatedTa(event.taMultiplier);
+            final wageTa = wage + ta;
+
+            return Container(
+              margin: const EdgeInsets.only(bottom: 11),
+              decoration: BoxDecoration(
+                color: surface,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: border, width: 1),
+                boxShadow: const [
+                  BoxShadow(color: Color(0x22000000), blurRadius: 12, offset: Offset(0, 5)),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(14, 13, 13, 10),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 43,
+                          height: 43,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: mint.withOpacity(.10),
+                            border: Border.all(color: mint.withOpacity(.55), width: 1.2),
+                          ),
+                          child: const Icon(Icons.person_rounded, color: mint, size: 25),
+                        ),
+                        const SizedBox(width: 11),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              TextButton.icon(
-                                style: TextButton.styleFrom(visualDensity: VisualDensity.compact, padding: const EdgeInsets.symmetric(horizontal: 4)),
-                                onPressed: event.otherExpenseItems.isEmpty ? null : () async {
-                                  final unavailable = assignedExpenseNames(exceptKey: key);
-                                  final available = event.otherExpenseItems.where((item) => !unavailable.contains(item['name']?.toString() ?? 'Expense')).toList();
-                                  final selected = expenses.map((e) => e['name'].toString()).toSet();
-                                  final result = await showDialog<Set<String>>(
-                                    context: ctx,
-                                    builder: (pickCtx) => StatefulBuilder(builder: (pickCtx, pickSet) => AlertDialog(
-                                      title: const Text('Select Other Expenses'),
-                                      content: SizedBox(width: double.maxFinite, child: available.isEmpty
-                                        ? const Text('All expenses are already assigned to other staff.')
-                                        : ListView(shrinkWrap: true, children: available.map((item) {
-                                            final name = item['name']?.toString() ?? 'Expense';
-                                            final value = (item['amount'] as num?)?.toDouble() ?? 0;
-                                            return CheckboxListTile(contentPadding: EdgeInsets.zero, dense: true, value: selected.contains(name), title: Text(name), subtitle: Text(_money(value)), onChanged: (checked) => pickSet(() { if (checked == true) selected.add(name); else selected.remove(name); }));
-                                          }).toList())),
-                                      actions: [TextButton(onPressed: () => Navigator.pop(pickCtx), child: const Text('Cancel')), FilledButton(onPressed: () => Navigator.pop(pickCtx, selected), child: const Text('Done'))],
-                                    )),
-                                  );
-                                  if (result != null) setDialogState(() {
-                                    expenses.removeWhere((e) => !result.contains(e['name'].toString()));
-                                    for (final item in available) {
-                                      final name = item['name']?.toString() ?? 'Expense';
-                                      if (result.contains(name) && !expenses.any((e) => e['name'] == name)) expenses.add({'name': name, 'amount': (item['amount'] as num?)?.toDouble() ?? 0});
-                                    }
-                                  });
-                                },
-                                icon: const Icon(Icons.add, size: 16), label: const Text('Other Expenses'),
+                              Text(
+                                person.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w800),
                               ),
-                              SizedBox(width: 118, child: TextFormField(
-                                key: ValueKey('setting-$key'),
-                                initialValue: ((row['settingBillAmount'] as num?)?.toDouble() ?? 0).toStringAsFixed(0),
-                                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                textAlign: TextAlign.end,
-                                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-                                decoration: const InputDecoration(isDense: true, prefixText: '₹ ', labelText: 'Settings Bill', contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 7)),
-                                onChanged: (value) => setDialogState(() {
-                                  final parsed = double.tryParse(value) ?? 0;
-                                  row['settingBillAmount'] = parsed < 0 ? 0.0 : parsed;
-                                }),
-                              )),
+                              const SizedBox(height: 3),
+                              Text(
+                                'Wage ${_money(wage)}  +  TA ${_money(ta)}',
+                                style: const TextStyle(color: muted, fontSize: 12, fontWeight: FontWeight.w500),
+                              ),
                             ],
                           ),
-                          Align(alignment: Alignment.centerRight, child: Text('Total: ${_money(rowTotal(person))}', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12, color: Theme.of(ctx).colorScheme.primary))),
-                        ]),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          _money(wageTa),
+                          style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w900),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (expenses.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(13, 0, 13, 9),
+                      child: Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: expenses.map((expense) {
+                          final amount = (expense['amount'] as num?)?.toDouble() ?? 0;
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF080B0A),
+                              border: Border.all(color: border),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(10),
+                              onTap: () async {
+                                final edited = await _editBreakdownAmount(amount, '${expense['name']} · ${person.name}');
+                                if (edited != null) setDialogState(() => expense['amount'] = edited);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('${expense['name']}  ${_money(amount)}',
+                                        style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600)),
+                                    const SizedBox(width: 7),
+                                    InkWell(
+                                      onTap: () => setDialogState(() => expenses.remove(expense)),
+                                      child: const Icon(Icons.close_rounded, color: muted, size: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
                       ),
-                    );
-                  }),
-                  Container(width: double.infinity, padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: Theme.of(ctx).colorScheme.primaryContainer, borderRadius: BorderRadius.circular(12)), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                    Text('Settings Bill Remaining: ${_money(settingRemaining())}', style: const TextStyle(fontWeight: FontWeight.w800)),
-                    const Divider(),
-                    ...staff.map((person) => Padding(padding: const EdgeInsets.symmetric(vertical: 2), child: Text('${person.name} :- ${_money(rowTotal(person)).replaceFirst('₹', '')}', style: const TextStyle(fontWeight: FontWeight.w600)))),
-                    const Divider(),
-                    Text('Total Bill :- ${_money(grandTotal)}', textAlign: TextAlign.right, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 17)),
-                  ])),
-                ]),
+                    ),
+                  Container(height: 1, color: border.withOpacity(.75)),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 9, 12, 10),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(10),
+                            onTap: event.otherExpenseItems.isEmpty
+                                ? null
+                                : () async {
+                                    final unavailable = assignedExpenseNames(exceptKey: key);
+                                    final available = event.otherExpenseItems
+                                        .where((item) => !unavailable.contains(item['name']?.toString() ?? 'Expense'))
+                                        .toList();
+                                    final selected = expenses.map((e) => e['name'].toString()).toSet();
+                                    final result = await showDialog<Set<String>>(
+                                      context: ctx,
+                                      builder: (pickCtx) => StatefulBuilder(
+                                        builder: (pickCtx, pickSet) => AlertDialog(
+                                          title: const Text('Select Other Expenses'),
+                                          content: SizedBox(
+                                            width: double.maxFinite,
+                                            child: available.isEmpty
+                                                ? const Text('All expenses are already assigned to other staff.')
+                                                : ListView(
+                                                    shrinkWrap: true,
+                                                    children: available.map((item) {
+                                                      final name = item['name']?.toString() ?? 'Expense';
+                                                      final value = (item['amount'] as num?)?.toDouble() ?? 0;
+                                                      return CheckboxListTile(
+                                                        contentPadding: EdgeInsets.zero,
+                                                        dense: true,
+                                                        value: selected.contains(name),
+                                                        title: Text(name),
+                                                        subtitle: Text(_money(value)),
+                                                        onChanged: (checked) => pickSet(() {
+                                                          if (checked == true) {
+                                                            selected.add(name);
+                                                          } else {
+                                                            selected.remove(name);
+                                                          }
+                                                        }),
+                                                      );
+                                                    }).toList(),
+                                                  ),
+                                          ),
+                                          actions: [
+                                            TextButton(onPressed: () => Navigator.pop(pickCtx), child: const Text('Cancel')),
+                                            FilledButton(onPressed: () => Navigator.pop(pickCtx, selected), child: const Text('Done')),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                    if (result != null) {
+                                      setDialogState(() {
+                                        expenses.removeWhere((e) => !result.contains(e['name'].toString()));
+                                        for (final item in available) {
+                                          final name = item['name']?.toString() ?? 'Expense';
+                                          if (result.contains(name) && !expenses.any((e) => e['name'] == name)) {
+                                            expenses.add({'name': name, 'amount': (item['amount'] as num?)?.toDouble() ?? 0});
+                                          }
+                                        }
+                                      });
+                                    }
+                                  },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 2),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.add_circle_outline_rounded, color: mint, size: 20),
+                                  const SizedBox(width: 7),
+                                  Flexible(
+                                    child: Text(
+                                      'Other Expenses',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: event.otherExpenseItems.isEmpty ? muted : mint,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(width: 1, height: 38, color: border),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          flex: 4,
+                          child: TextFormField(
+                            key: ValueKey('setting-$key'),
+                            initialValue: ((row['settingBillAmount'] as num?)?.toDouble() ?? 0).toStringAsFixed(0),
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            textAlign: TextAlign.end,
+                            style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w800),
+                            decoration: InputDecoration(
+                              isDense: true,
+                              prefixText: '₹ ',
+                              prefixStyle: const TextStyle(color: muted, fontWeight: FontWeight.w700),
+                              labelText: 'Settings Bill',
+                              labelStyle: const TextStyle(color: mint, fontSize: 11, fontWeight: FontWeight.w700),
+                              floatingLabelBehavior: FloatingLabelBehavior.always,
+                              filled: true,
+                              fillColor: surfaceSoft,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(13),
+                                borderSide: const BorderSide(color: border),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(13),
+                                borderSide: const BorderSide(color: mint, width: 1.5),
+                              ),
+                            ),
+                            onChanged: (value) => setDialogState(() {
+                              final parsed = double.tryParse(value) ?? 0;
+                              row['settingBillAmount'] = parsed < 0 ? 0.0 : parsed;
+                            }),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.fromLTRB(13, 8, 14, 9),
+                    decoration: BoxDecoration(
+                      color: mint.withOpacity(.055),
+                      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(19)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Text('TOTAL  ', style: TextStyle(color: muted, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 1)),
+                        Text(_money(rowTotal(person)), style: const TextStyle(color: mint, fontSize: 15, fontWeight: FontWeight.w900)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return Dialog(
+            backgroundColor: background,
+            surfaceTintColor: Colors.transparent,
+            insetPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(27), side: const BorderSide(color: Color(0xFF202A26))),
+            clipBehavior: Clip.antiAlias,
+            child: SizedBox(
+              width: double.maxFinite,
+              height: screenHeight * .91,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(17, 17, 15, 12),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 43,
+                          height: 43,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: mint.withOpacity(.12),
+                            border: Border.all(color: mint.withOpacity(.65)),
+                          ),
+                          child: const Icon(Icons.calculate_rounded, color: mint, size: 23),
+                        ),
+                        const SizedBox(width: 11),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('SP / CP', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900)),
+                              Text('Wage Breakdown', style: TextStyle(color: muted, fontSize: 13, fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: 'Close',
+                          onPressed: () => Navigator.pop(dialogContext),
+                          icon: const Icon(Icons.close_rounded, color: muted),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 12),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [mint.withOpacity(.15), const Color(0xFF101714)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(17),
+                        border: Border.all(color: mint.withOpacity(.7)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.groups_rounded, color: mint, size: 27),
+                          const SizedBox(width: 12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('TOTAL STAFF', style: TextStyle(color: muted, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: .8)),
+                              Text('${staff.length}', style: const TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w900)),
+                            ],
+                          ),
+                          const SizedBox(width: 14),
+                          Container(width: 1, height: 38, color: border),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('GRAND TOTAL', style: TextStyle(color: muted, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: .8)),
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(_money(grandTotal), style: const TextStyle(color: mint, fontSize: 23, fontWeight: FontWeight.w900)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(17, 0, 17, 8),
+                    child: Row(
+                      children: [
+                        const Text('STAFF BREAKDOWN', style: TextStyle(color: muted, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 1)),
+                        const Spacer(),
+                        Text('${staff.length} MEMBERS', style: const TextStyle(color: mint, fontSize: 10, fontWeight: FontWeight.w800)),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
+                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                      itemCount: staff.length,
+                      itemBuilder: (context, index) => staffCard(staff[index]),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(14, 11, 14, 14),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF0D1210),
+                      border: Border(top: BorderSide(color: border)),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.account_balance_wallet_outlined, color: mint, size: 16),
+                            const SizedBox(width: 7),
+                            const Expanded(child: Text('Settings Bill Remaining', style: TextStyle(color: muted, fontSize: 11, fontWeight: FontWeight.w600))),
+                            Text(_money(settingRemaining()), style: TextStyle(color: settingRemaining() < 0 ? Colors.redAccent : mint, fontSize: 12, fontWeight: FontWeight.w800)),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () => Navigator.pop(dialogContext),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: mint,
+                                  side: const BorderSide(color: border),
+                                  minimumSize: const Size(0, 49),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                                ),
+                                child: const Text('Cancel', style: TextStyle(fontWeight: FontWeight.w800)),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              flex: 2,
+                              child: FilledButton.icon(
+                                onPressed: () async {
+                                  if (settingAssigned() > event.settingExpenses + 0.0001) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Settings Bill exceeds available balance ${_money(event.settingExpenses)}.')),
+                                    );
+                                    return;
+                                  }
+                                  event.spCpWageBreakdown = rows.values.map((row) => Map<String, dynamic>.from(row)).toList();
+                                  await StorageService.saveBill(event);
+                                  final lines = <String>[];
+                                  for (final person in staff) {
+                                    lines.add('${person.name} :- ${_money(rowTotal(person)).replaceFirst('₹', '')}');
+                                  }
+                                  lines.add('');
+                                  lines.add('Total Bill :- ${_money(grandTotal).replaceFirst('₹', '')}');
+                                  lines.add('Settings Bill Remaining :- ${_money(settingRemaining()).replaceFirst('₹', '')}');
+                                  await Clipboard.setData(ClipboardData(text: lines.join('\n')));
+                                  if (dialogContext.mounted) Navigator.pop(dialogContext);
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Wage breakdown saved and copied.')),
+                                    );
+                                  }
+                                },
+                                icon: const Icon(Icons.copy_rounded, size: 19),
+                                label: const Text('Save & Copy', style: TextStyle(fontWeight: FontWeight.w900)),
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: mint,
+                                  foregroundColor: const Color(0xFF07110D),
+                                  minimumSize: const Size(0, 49),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-            actions: [
-              TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
-              FilledButton.icon(
-                onPressed: () async {
-                  if (settingAssigned() > event.settingExpenses + 0.0001) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Settings Bill exceeds available balance ${_money(event.settingExpenses)}.')));
-                    return;
-                  }
-                  event.spCpWageBreakdown = rows.values.map((row) => Map<String, dynamic>.from(row)).toList();
-                  await StorageService.saveBill(event);
-                  final lines = <String>[];
-                  for (final person in staff) lines.add('${person.name} :- ${_money(rowTotal(person)).replaceFirst('₹', '')}');
-                  lines.add('');
-                  lines.add('Total Bill :- ${_money(grandTotal).replaceFirst('₹', '')}');
-                  lines.add('Settings Bill Remaining :- ${_money(settingRemaining()).replaceFirst('₹', '')}');
-                  await Clipboard.setData(ClipboardData(text: lines.join('\n')));
-                  if (dialogContext.mounted) Navigator.pop(dialogContext);
-                  if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wage breakdown saved and copied.')));
-                },
-                icon: const Icon(Icons.copy_rounded), label: const Text('Save & Copy'),
-              ),
-            ],
           );
         },
       ),
